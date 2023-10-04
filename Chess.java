@@ -61,6 +61,69 @@ public class Chess {
 		
 		/* FOLLOWING LINE IS A PLACEHOLDER TO MAKE COMPILER HAPPY */
 		/* WHEN YOU FILL IN THIS METHOD, YOU NEED TO RETURN A ReturnPlay OBJECT */
+		String startFile = move.substring(0,1);
+		int startRank = Integer.parseInt(move.substring(1,2));
+
+		String endFile = move.substring(3,4);
+		int endRank = Integer.parseInt(move.substring(4,5));
+
+		//curerntPieces
+		Bishop currentBishop = null;
+		Pawn currentPawn = null;
+		King currentKing = null;
+		Queen currentQueen = null;
+		Knight currentKnight = null;
+		Rook currentRook = null; 
+		//set all possible current pieces to null, then if statements check for if(currentPiece != null)
+		
+	
+
+		for (ReturnPiece rp: play.piecesOnBoard){
+			
+
+			//testing: this WORKS AND arraylist is populated: 
+			//System.out.println(rp.toString());
+			//System.out.println(rp.toString().substring(0,2));
+
+			if(move.substring(0, 2).equals(rp.toString().substring(0,2)) && rp instanceof Bishop) //find the piece and attach it to current piece
+			{
+				currentBishop = (Bishop)rp;
+				break; //leave loop
+			}
+			//Pawn check
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Pawn) //find the piece and attach it to current piece
+			{
+				currentPawn = (Pawn)rp;
+				break; //leave loop
+			}
+			//King check
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof King) //find the piece and attach it to current piece
+			{
+				currentKing = (King)rp;
+				break; //leave loop
+			}
+			//Queen check
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Queen) //find the piece and attach it to current piece
+			{
+				currentQueen = (Queen)rp;
+				break; //leave loop
+			}
+			//Knight check
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
+			{
+				currentKnight = (Knight)rp;
+				break; //leave loop
+			}
+			//Rook check
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
+			{
+				currentRook = (Rook)rp;
+				break; //leave loop
+			}
+		}
+
+		//TODO: if statements for the game state after each piece has gone
+		boolean canMove = currentBishop.checkValidMove(play.piecesOnBoard,move);
 
 
 

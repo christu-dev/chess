@@ -1,3 +1,4 @@
+//driver - testing Chess.java and all other classes made
 package chess;
 
 import java.util.ArrayList;
