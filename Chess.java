@@ -73,6 +73,13 @@ public class Chess {
 		String endFile = move.substring(3,4);
 		int endRank = Integer.parseInt(move.substring(4,5));
 
+		/*System.out.println("Int value of Char: "+startFile+" is "+(int)startFile.charAt(0));
+		System.out.println("Int value of Char: "+endFile+" is "+(int)endFile.charAt(0));
+		int difference = Math.abs((int)startFile.charAt(0)-(int)endFile.charAt(0));
+		System.out.println("Their difference is "+ difference);
+		System.out.println("The char b should have a value of 98. Print 98 from b: "+(int)'b');*/
+
+
 		//curerntPieces
 		Bishop currentBishop = null;
 		Pawn currentPawn = null;
@@ -267,6 +274,15 @@ public class Chess {
 			}
 
 		}
+		/*
+		 * 
+		 * 
+		 * TO DO IMPLEMENT LATER: YOU CANNOT MOVE A PIECE THAT PUTS YOUR KING IN CHECK
+		 * IF YOU DO, RETURN ILLEGAL MOVE.
+		 * 
+		 * 
+		 * 
+		 */
 		//if piece found was a Pawn:----------------------------------------------------------------------------------------------------------------
 		else if(currentPawn != null)
 		{
@@ -458,8 +474,7 @@ public class Chess {
 		play.piecesOnBoard = new ArrayList<ReturnPiece>();
 		play.piecesOnBoard.clear();
 
-		
-		play.piecesOnBoard.clear();
+	
 		//make a ReturnPiece object for every piece, and define its enums and fields
 
 		//Pieces which have duplicates: 1 is LHS, 2 is RHS
