@@ -9,5 +9,9 @@ class Knight extends ReturnPiece {
 		else
 		this.pieceType = ReturnPiece.PieceType.BN;
 	}
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		return true;
+	}
 
 }

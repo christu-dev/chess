@@ -24,5 +24,9 @@ class King extends ReturnPiece
 	}
 
 	//TODO: move checker and castle checker and check checker 
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		return true;
+	}
 
 }

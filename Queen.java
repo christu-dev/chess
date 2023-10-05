@@ -10,5 +10,9 @@ class Queen extends ReturnPiece {
 		else
 		this.pieceType = ReturnPiece.PieceType.BQ;
 	}
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		return true;
+	}
 
 }

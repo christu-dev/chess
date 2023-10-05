@@ -9,5 +9,9 @@ class Rook extends ReturnPiece {
 		else
 		this.pieceType = ReturnPiece.PieceType.BR;
 	}
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		return true;
+	}
 
 }

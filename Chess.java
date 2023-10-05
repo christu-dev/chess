@@ -44,7 +44,11 @@ class ReturnPlay {
 public class Chess {
 	static ReturnPlay play; //ReturnPlay object holds ArrayList<ReturnPiece> piecesOnBoard
 
+
+
 	enum Player { white, black }
+
+	private static chess.Chess.Player currentPlayer = chess.Chess.Player.white;  //enum Player variable currentPlayer tracks player color
 	
 	/**
 	 * Plays the next move for whichever player has the turn.
@@ -61,6 +65,8 @@ public class Chess {
 		
 		/* FOLLOWING LINE IS A PLACEHOLDER TO MAKE COMPILER HAPPY */
 		/* WHEN YOU FILL IN THIS METHOD, YOU NEED TO RETURN A ReturnPlay OBJECT */
+
+
 		String startFile = move.substring(0,1);
 		int startRank = Integer.parseInt(move.substring(1,2));
 
@@ -79,51 +85,359 @@ public class Chess {
 	
 
 		for (ReturnPiece rp: play.piecesOnBoard){
-			
-
+	
 			//testing: this WORKS AND arraylist is populated: 
 			//System.out.println(rp.toString());
 			//System.out.println(rp.toString().substring(0,2));
 
+			//FIND TYPE OF PIECE AT ORIGIN
+
+			//Bishop Check
 			if(move.substring(0, 2).equals(rp.toString().substring(0,2)) && rp instanceof Bishop) //find the piece and attach it to current piece
 			{
-				currentBishop = (Bishop)rp;
-				break; //leave loop
+				//check if the piece belongs to player
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WB)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentBishop = (Bishop)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BB)
+				{
+					play.message = null;
+					currentBishop = (Bishop)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				}
+				
 			}
 			//Pawn check
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Pawn) //find the piece and attach it to current piece
 			{
-				currentPawn = (Pawn)rp;
-				break; //leave loop
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WP)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentPawn = (Pawn)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BP)
+				{
+					play.message = null;
+					currentPawn = (Pawn)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				}
 			}
 			//King check
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof King) //find the piece and attach it to current piece
 			{
-				currentKing = (King)rp;
-				break; //leave loop
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WK)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentKing = (King)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BK)
+				{
+					play.message = null;
+					currentKing = (King)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				}
 			}
 			//Queen check
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Queen) //find the piece and attach it to current piece
 			{
-				currentQueen = (Queen)rp;
-				break; //leave loop
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WQ)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentQueen = (Queen)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BQ)
+				{
+					play.message = null;
+					currentQueen = (Queen)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				}
 			}
 			//Knight check
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
 			{
-				currentKnight = (Knight)rp;
-				break; //leave loop
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WN)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentKnight = (Knight)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BN)
+				{
+					play.message = null;
+					currentKnight = (Knight)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				} 
 			}
 			//Rook check
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
 			{
-				currentRook = (Rook)rp;
-				break; //leave loop
+				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WR)
+				{
+					play.message = null; //no play message state - game is ongoing
+					currentRook = (Rook)rp;
+					break; //leave loop
+				}
+				else if(currentPlayer == chess.Chess.Player.black && rp.pieceType == ReturnPiece.PieceType.BR)
+				{
+					play.message = null;
+					currentRook = (Rook)rp;
+					break; 
+				}
+				else
+				{	//picked wrong color
+					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					break;
+				}
 			}
 		}
 
 		//TODO: if statements for the game state after each piece has gone
-		boolean canMove = currentBishop.checkValidMove(play.piecesOnBoard,move);
+		/*
+		 * 
+		 * 
+		 * Validate moves, Check/Checkmate , updating the board, returning play
+		 * 
+		 * 
+		 */
+
+		//if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
+		if(currentBishop != null)
+		{
+
+			boolean canMove = currentBishop.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}			
+			}
+
+		}
+		//if piece found was a Pawn:----------------------------------------------------------------------------------------------------------------
+		else if(currentPawn != null)
+		{
+			boolean canMove = currentPawn.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}				
+			}
+		}
+		//if piece found was a King:----------------------------------------------------------------------------------------------------------------
+		else if(currentKing != null)
+		{
+			boolean canMove = currentKing.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}	
+			}
+		}
+		//if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
+		else if(currentQueen != null)
+		{
+			boolean canMove = currentQueen.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}	
+			}
+		}
+		//if piece found was a Knight
+		else if(currentKnight != null)
+		{
+			boolean canMove = currentKnight.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}	
+			}
+		}
+		//if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
+		else if(currentRook != null)
+		{
+			boolean canMove = currentRook.checkValidMove(play.piecesOnBoard,move);
+			if(canMove == false)
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return play;
+			}
+			else //move is valid
+			{
+				play.message = null;
+				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				
+				//SWITCH COLORS and RETURN PLAY
+				if(currentPlayer == chess.Chess.Player.white)
+				{
+					currentPlayer = chess.Chess.Player.black;
+					return play;
+				}
+				if(currentPlayer == chess.Chess.Player.black)
+				{
+					currentPlayer = chess.Chess.Player.white;
+					return play;
+				}
+				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				{
+					System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
+					return play;
+				}	
+			}
+		}
+		
 
 
 
@@ -137,6 +451,9 @@ public class Chess {
 	 */
 	public static void start() {
 		//make an array list to hold all the new pieces
+		//somehow set player to white to start
+		currentPlayer = chess.Chess.Player.white; 
+
 		play = new ReturnPlay();
 		play.piecesOnBoard = new ArrayList<ReturnPiece>();
 		play.piecesOnBoard.clear();

@@ -9,5 +9,9 @@ class Pawn extends ReturnPiece {
 		else
 		this.pieceType = ReturnPiece.PieceType.BP;
 	}
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		return true;
+	}
 
 }
