@@ -57,7 +57,7 @@ class Bishop extends ReturnPiece {
 
 		//checking for any pieces in the way
 		int x = (int)startFile + FileOffset;
-		for(int y = startRank + RankOffset; y <= endRank; y += RankOffset){
+		for(int y = startRank + RankOffset; y != endRank; y += RankOffset){
 			for (ReturnPiece rp: currentBoard)
 			{
 				String checkPos = ""+(char)x+y+"";

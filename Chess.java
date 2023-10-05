@@ -73,6 +73,9 @@ public class Chess {
 		String endFile = move.substring(3,4);
 		int endRank = Integer.parseInt(move.substring(4,5));
 
+
+		//TODO: Out of board Bounds
+
 		/*System.out.println("Int value of Char: "+startFile+" is "+(int)startFile.charAt(0));
 		System.out.println("Int value of Char: "+endFile+" is "+(int)endFile.charAt(0));
 		int difference = Math.abs((int)startFile.charAt(0)-(int)endFile.charAt(0));
@@ -254,6 +257,50 @@ public class Chess {
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				//MOVING THE PIECE
+				for (ReturnPiece rp: play.piecesOnBoard){
+					if(rp.equals(currentBishop))
+					{
+						//update the respectiev piece in play.piecesOnBoard
+						if(endFile.equals("a"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.a;
+						}
+						if(endFile.equals("b"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b;
+						}
+						if(endFile.equals("c"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c;
+						}
+						if(endFile.equals("d"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d;
+						}
+						if(endFile.equals("e"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.e;
+						}
+						if(endFile.equals("f"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f;
+						}
+						if(endFile.equals("g"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g;
+						}
+						if(endFile.equals("h"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.h;
+						}
+
+						rp.pieceRank = endRank;
+						
+						
+					}
+				}
 
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
@@ -526,9 +573,9 @@ public class Chess {
 		WP3.pieceFile = ReturnPiece.PieceFile.c; WP3.pieceRank = 2;
 		play.piecesOnBoard.add(WP3);
 		//D2
-		ReturnPiece WP4 = new Pawn(true);
+		/*ReturnPiece WP4 = new Pawn(true);
 		WP4.pieceFile = ReturnPiece.PieceFile.d; WP4.pieceRank = 2;
-		play.piecesOnBoard.add(WP4);
+		play.piecesOnBoard.add(WP4);*/
 		//E2
 		ReturnPiece WP5 = new Pawn(true);
 		WP5.pieceFile = ReturnPiece.PieceFile.e; WP5.pieceRank = 2;
