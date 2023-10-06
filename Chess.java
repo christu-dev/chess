@@ -448,6 +448,49 @@ public class Chess {
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 				
+				//MOVING THE PIECE
+				for (ReturnPiece rp: play.piecesOnBoard){
+					if(rp.equals(currentKnight))
+					{
+						//update the respectiev piece in play.piecesOnBoard
+						if(endFile.equals("a"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.a;
+						}
+						if(endFile.equals("b"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b;
+						}
+						if(endFile.equals("c"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c;
+						}
+						if(endFile.equals("d"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d;
+						}
+						if(endFile.equals("e"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.e;
+						}
+						if(endFile.equals("f"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f;
+						}
+						if(endFile.equals("g"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g;
+						}
+						if(endFile.equals("h"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.h;
+						}
+
+						rp.pieceRank = endRank;
+						
+						
+					}
+				}
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
 				{
