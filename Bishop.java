@@ -28,12 +28,12 @@ class Bishop extends ReturnPiece {
 		System.out.println(endRank);*/
 
 		if(startFile == endFile || startRank == endRank){
-			System.out.println("Bishop Did not move Diagonally");
+			//System.out.println("Bishop Did not move Diagonally");
 			return false;
 		}
 	 	if(Math.abs(endRank - startRank) != Math.abs(startFile - endFile))
 		{
-			System.out.println("Bishop Did not move diagonally respective to starting position");
+			//System.out.println("Bishop Did not move diagonally respective to starting position");
 			return false;
 		}
 

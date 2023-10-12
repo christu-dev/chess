@@ -48,7 +48,7 @@ class Queen extends ReturnPiece {
                 for (int rank = startRank + rankOffset; rank != endRank; rank += rankOffset) 
 				{
                     if (isOccupied(currentBoard, startFile, rank)) {
-						System.out.println("something is blocking the queen");
+						//System.out.println("something is blocking the queen");
                         return false; //piece is in way while moving vertically
                     }
                 }
@@ -61,7 +61,7 @@ class Queen extends ReturnPiece {
 				{
                     if (isOccupied(currentBoard, file, startRank)) 
 					{
-						System.out.println("something is blocking the queen");
+						//System.out.println("something is blocking the queen");
                         return false; //piece is in way while moving horizontally
                     }
                 }
@@ -74,7 +74,7 @@ class Queen extends ReturnPiece {
             for (int rank = startRank + rankOffset; rank != endRank; rank += rankOffset) //rank starts incremented/decremented once
 			{
                 if (isOccupied(currentBoard, file, rank)) {
-					System.out.println("something is blocking the queen");
+					//System.out.println("something is blocking the queen");
                     return false;
                 }
                 file = (char)(file + fileOffset); 
