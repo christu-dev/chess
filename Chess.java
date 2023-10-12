@@ -377,12 +377,6 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-
-				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-
-				//MOVING THE Bishop
-
 				King currWK = null;
 				King currBK = null;
 				for(ReturnPiece rp: play.piecesOnBoard)
@@ -717,78 +711,324 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-
-				//TO DO Before, Add if moving would make king in check
-
-				//Moving the Pawn
-				for (ReturnPiece rp: play.piecesOnBoard){
-					if(rp.equals(currentPawn))
-					{
-						//update the respectiev piece in play.piecesOnBoard
-						if(endFile.equals("a"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.a;
-						}
-						if(endFile.equals("b"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b;
-						}
-						if(endFile.equals("c"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c;
-						}
-						if(endFile.equals("d"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d;
-						}
-						if(endFile.equals("e"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.e;
-						}
-						if(endFile.equals("f"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f;
-						}
-						if(endFile.equals("g"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g;
-						}
-						if(endFile.equals("h"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.h;
-						}
-
-						rp.pieceRank = endRank;
-						
-						
+				King currWK = null;
+				King currBK = null;
+				for(ReturnPiece rp: play.piecesOnBoard)
+				{
+					if(rp.pieceType == ReturnPiece.PieceType.WK){ //attach white king to current White King
+						currWK = (King)rp;
 					}
+					if(rp.pieceType == ReturnPiece.PieceType.BK){ //attach black king to current Black King
+						currBK = (King)rp;
+					}
+
 				}
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				white_currently_checked = currWK.onCheck(play.piecesOnBoard); //returns true if white is checked before move
+				black_currently_checked = currBK.onCheck(play.piecesOnBoard); //returns true if black is checked before move
 
-				if(move.contains("draw?")){
-					play.message = ReturnPlay.Message.DRAW;
-					return play;
-				}
+				if(white_currently_checked || black_currently_checked) //currently there exists a check before move
+				{
+					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently white check - white moves and fails to leave check
+						} 
+						else //white moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							white_currently_checked = false; //leave check
 
-				//SWITCH COLORS and RETURN PLAY
-				if(currentPlayer == chess.Chess.Player.white)
-				{
-					currentPlayer = chess.Chess.Player.black;
-					return play;
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentPawn))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currBK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+								return play; //white leaves check and simultaneously checkmates black
+							}
+							else if(currBK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								black_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.black; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.black; //player switches
+								play.message = null;
+								return play; //white moves and leaves check
+							}
+						}
+					}
+					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently black check - black moves and fails to leave check
+						} 
+						else //black moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							black_currently_checked = false; //leave check
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentPawn))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currWK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+								return play; //black leaves check and simultaneously checkmates white
+							}
+							else if(currWK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								white_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.white; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.white; //player switches
+								play.message = null;
+								return play; //black moves and leaves check
+							}
+						}
+					}	
+
 				}
-				if(currentPlayer == chess.Chess.Player.black)
+				else  //not currently checked before the player moves move
 				{
-					currentPlayer = chess.Chess.Player.white;
-					return play;
-				}
-				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
-				{
-					//System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
-					return play;
-				}				
-			}
+					//checks if moving puts own King in danger
+					if(currentPlayer == chess.Chess.Player.white)
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+						} 
+					}
+					else if(currentPlayer == chess.Chess.Player.black)
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move)) //simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+
+						} 
+					}
+	
+					//move the piece
+					for (ReturnPiece rp: play.piecesOnBoard){
+						if(rp.equals(currentPawn))
+						{
+							//update the respectiev piece in play.piecesOnBoard
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+					}
+					//checks checkmate after piece is moved
+					if(currBK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+						return play;
+					}
+					if(currWK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+						return play;
+					}
+					//checks check after piece is moved
+					if(currWK.onCheck(play.piecesOnBoard) || currBK.onCheck(play.piecesOnBoard)) 
+					{
+						play.message = ReturnPlay.Message.CHECK;
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						//Not currently check -> white or black moves and puts white or black in check
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							return play;
+						} 
+					}					
+					else //not in check after move
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							play.message = null;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							play.message = null;
+							return play;
+						}
+					}
+
+				}		
+			}//encapsulates move is valid
 		}
 		//TODO if piece found was a King:----------------------------------------------------------------------------------------------------------------
 		else if(currentKing != null)
@@ -803,34 +1043,324 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-
-				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-
-				if(move.contains("draw?")){
-					play.message = ReturnPlay.Message.DRAW;
-					return play;
-				}
-				
-				//SWITCH COLORS and RETURN PLAY
-				if(currentPlayer == chess.Chess.Player.white)
+				King currWK = null;
+				King currBK = null;
+				for(ReturnPiece rp: play.piecesOnBoard)
 				{
-					currentPlayer = chess.Chess.Player.black;
-					return play;
+					if(rp.pieceType == ReturnPiece.PieceType.WK){ //attach white king to current White King
+						currWK = (King)rp;
+					}
+					if(rp.pieceType == ReturnPiece.PieceType.BK){ //attach black king to current Black King
+						currBK = (King)rp;
+					}
+
 				}
-				if(currentPlayer == chess.Chess.Player.black)
+
+				white_currently_checked = currWK.onCheck(play.piecesOnBoard); //returns true if white is checked before move
+				black_currently_checked = currBK.onCheck(play.piecesOnBoard); //returns true if black is checked before move
+
+				if(white_currently_checked || black_currently_checked) //currently there exists a check before move
 				{
-					currentPlayer = chess.Chess.Player.white;
-					return play;
+					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently white check - white moves and fails to leave check
+						} 
+						else //white moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							white_currently_checked = false; //leave check
+
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentKing))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currBK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+								return play; //white leaves check and simultaneously checkmates black
+							}
+							else if(currBK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								black_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.black; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.black; //player switches
+								play.message = null;
+								return play; //white moves and leaves check
+							}
+						}
+					}
+					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently black check - black moves and fails to leave check
+						} 
+						else //black moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							black_currently_checked = false; //leave check
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentKing))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currWK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+								return play; //black leaves check and simultaneously checkmates white
+							}
+							else if(currWK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								white_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.white; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.white; //player switches
+								play.message = null;
+								return play; //black moves and leaves check
+							}
+						}
+					}	
+
 				}
-				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
+				else  //not currently checked before the player moves move
 				{
-					//System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
-					return play;
+					//checks if moving puts own King in danger
+					if(currentPlayer == chess.Chess.Player.white)
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+						} 
+					}
+					else if(currentPlayer == chess.Chess.Player.black)
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move)) //simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+
+						} 
+					}
+	
+					//move the piece
+					for (ReturnPiece rp: play.piecesOnBoard){
+						if(rp.equals(currentKing))
+						{
+							//update the respectiev piece in play.piecesOnBoard
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+					}
+					//checks checkmate after piece is moved
+					if(currBK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+						return play;
+					}
+					if(currWK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+						return play;
+					}
+					//checks check after piece is moved
+					if(currWK.onCheck(play.piecesOnBoard) || currBK.onCheck(play.piecesOnBoard)) 
+					{
+						play.message = ReturnPlay.Message.CHECK;
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						//Not currently check -> white or black moves and puts white or black in check
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							return play;
+						} 
+					}					
+					else //not in check after move
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							play.message = null;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							play.message = null;
+							return play;
+						}
+					}
+
 				}	
-			}
+			} //encapsulates move is valid
 		}
 		//TODO if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
 		else if(currentQueen != null)
@@ -845,75 +1375,324 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-				
-				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-				
-				for (ReturnPiece rp: play.piecesOnBoard){
-					if(rp.equals(currentQueen))
-					{
-						//update the respectiev piece in play.piecesOnBoard
-						if(endFile.equals("a"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.a;
-						}
-						if(endFile.equals("b"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b;
-						}
-						if(endFile.equals("c"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c;
-						}
-						if(endFile.equals("d"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d;
-						}
-						if(endFile.equals("e"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.e;
-						}
-						if(endFile.equals("f"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f;
-						}
-						if(endFile.equals("g"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g;
-						}
-						if(endFile.equals("h"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.h;
-						}
-						rp.pieceRank = endRank;
-												
+				King currWK = null;
+				King currBK = null;
+				for(ReturnPiece rp: play.piecesOnBoard)
+				{
+					if(rp.pieceType == ReturnPiece.PieceType.WK){ //attach white king to current White King
+						currWK = (King)rp;
 					}
+					if(rp.pieceType == ReturnPiece.PieceType.BK){ //attach black king to current Black King
+						currBK = (King)rp;
+					}
+
 				}
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				white_currently_checked = currWK.onCheck(play.piecesOnBoard); //returns true if white is checked before move
+				black_currently_checked = currBK.onCheck(play.piecesOnBoard); //returns true if black is checked before move
 
-				if(move.contains("draw?")){
-					play.message = ReturnPlay.Message.DRAW;
-					return play;
-				}
-				
-				//SWITCH COLORS and RETURN PLAY
-				if(currentPlayer == chess.Chess.Player.white)
+				if(white_currently_checked || black_currently_checked) //currently there exists a check before move
 				{
-					currentPlayer = chess.Chess.Player.black;
-					return play;
+					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently white check - white moves and fails to leave check
+						} 
+						else //white moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							white_currently_checked = false; //leave check
+
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentQueen))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currBK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+								return play; //white leaves check and simultaneously checkmates black
+							}
+							else if(currBK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								black_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.black; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.black; //player switches
+								play.message = null;
+								return play; //white moves and leaves check
+							}
+						}
+					}
+					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently black check - black moves and fails to leave check
+						} 
+						else //black moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							black_currently_checked = false; //leave check
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentQueen))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currWK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+								return play; //black leaves check and simultaneously checkmates white
+							}
+							else if(currWK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								white_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.white; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.white; //player switches
+								play.message = null;
+								return play; //black moves and leaves check
+							}
+						}
+					}	
+
 				}
-				if(currentPlayer == chess.Chess.Player.black)
+				else  //not currently checked before the player moves move
 				{
-					currentPlayer = chess.Chess.Player.white;
-					return play;
-				}
-				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
-				{
-					//System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
-					return play;
+					//checks if moving puts own King in danger
+					if(currentPlayer == chess.Chess.Player.white)
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+						} 
+					}
+					else if(currentPlayer == chess.Chess.Player.black)
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move)) //simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+
+						} 
+					}
+	
+					//move the piece
+					for (ReturnPiece rp: play.piecesOnBoard){
+						if(rp.equals(currentQueen))
+						{
+							//update the respectiev piece in play.piecesOnBoard
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+					}
+					//checks checkmate after piece is moved
+					if(currBK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+						return play;
+					}
+					if(currWK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+						return play;
+					}
+					//checks check after piece is moved
+					if(currWK.onCheck(play.piecesOnBoard) || currBK.onCheck(play.piecesOnBoard)) 
+					{
+						play.message = ReturnPlay.Message.CHECK;
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						//Not currently check -> white or black moves and puts white or black in check
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							return play;
+						} 
+					}					
+					else //not in check after move
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							play.message = null;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							play.message = null;
+							return play;
+						}
+					}
+
 				}	
-			}
+			} //encapsulates move is valid
 		}
 		//TODO if piece found was a Knight----------------------------------------------------------------------------------
 		else if(currentKnight != null)
@@ -928,78 +1707,324 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-
-				//TO DO before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-				
-				//MOVING THE PIECE
-				for (ReturnPiece rp: play.piecesOnBoard){
-					if(rp.equals(currentKnight))
-					{
-						//update the respectiev piece in play.piecesOnBoard
-						if(endFile.equals("a"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.a;
-						}
-						if(endFile.equals("b"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b;
-						}
-						if(endFile.equals("c"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c;
-						}
-						if(endFile.equals("d"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d;
-						}
-						if(endFile.equals("e"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.e;
-						}
-						if(endFile.equals("f"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f;
-						}
-						if(endFile.equals("g"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g;
-						}
-						if(endFile.equals("h"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.h;
-						}
-
-						rp.pieceRank = endRank;
-						
-						
+				King currWK = null;
+				King currBK = null;
+				for(ReturnPiece rp: play.piecesOnBoard)
+				{
+					if(rp.pieceType == ReturnPiece.PieceType.WK){ //attach white king to current White King
+						currWK = (King)rp;
 					}
+					if(rp.pieceType == ReturnPiece.PieceType.BK){ //attach black king to current Black King
+						currBK = (King)rp;
+					}
+
 				}
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				white_currently_checked = currWK.onCheck(play.piecesOnBoard); //returns true if white is checked before move
+				black_currently_checked = currBK.onCheck(play.piecesOnBoard); //returns true if black is checked before move
 
-				if(move.contains("draw?")){
-					play.message = ReturnPlay.Message.DRAW;
-					return play;
-				}
+				if(white_currently_checked || black_currently_checked) //currently there exists a check before move
+				{
+					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently white check - white moves and fails to leave check
+						} 
+						else //white moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							white_currently_checked = false; //leave check
 
-				//SWITCH COLORS and RETURN PLAY
-				if(currentPlayer == chess.Chess.Player.white)
-				{
-					currentPlayer = chess.Chess.Player.black;
-					return play;
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentKnight))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currBK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+								return play; //white leaves check and simultaneously checkmates black
+							}
+							else if(currBK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								black_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.black; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.black; //player switches
+								play.message = null;
+								return play; //white moves and leaves check
+							}
+						}
+					}
+					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently black check - black moves and fails to leave check
+						} 
+						else //black moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							black_currently_checked = false; //leave check
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentKnight))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currWK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+								return play; //black leaves check and simultaneously checkmates white
+							}
+							else if(currWK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								white_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.white; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.white; //player switches
+								play.message = null;
+								return play; //black moves and leaves check
+							}
+						}
+					}	
+
 				}
-				if(currentPlayer == chess.Chess.Player.black)
+				else  //not currently checked before the player moves move
 				{
-					currentPlayer = chess.Chess.Player.white;
-					return play;
-				}
-				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
-				{
-					//System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
-					return play;
+					//checks if moving puts own King in danger
+					if(currentPlayer == chess.Chess.Player.white)
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+						} 
+					}
+					else if(currentPlayer == chess.Chess.Player.black)
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move)) //simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+
+						} 
+					}
+	
+					//move the piece
+					for (ReturnPiece rp: play.piecesOnBoard){
+						if(rp.equals(currentKnight))
+						{
+							//update the respectiev piece in play.piecesOnBoard
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+					}
+					//checks checkmate after piece is moved
+					if(currBK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+						return play;
+					}
+					if(currWK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+						return play;
+					}
+					//checks check after piece is moved
+					if(currWK.onCheck(play.piecesOnBoard) || currBK.onCheck(play.piecesOnBoard)) 
+					{
+						play.message = ReturnPlay.Message.CHECK;
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						//Not currently check -> white or black moves and puts white or black in check
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							return play;
+						} 
+					}					
+					else //not in check after move
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							play.message = null;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							play.message = null;
+							return play;
+						}
+					}
+
 				}	
-			}
+			} //encapsulates move is valid
 		}
 		//TODO if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
 		else if(currentRook != null)
@@ -1014,87 +2039,329 @@ public class Chess {
 			else //move is valid
 			{
 				play.message = null;
-				//TO DO Add Piece moving and potential taking (update pieces on Board)
-
-				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
-
-				//Moving the Rook
-				for (ReturnPiece rp: play.piecesOnBoard){
-					if(rp.equals(currentRook))
-					{
-						//update the respectiev piece in play.piecesOnBoard
-						if(endFile.equals("a"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.a;
-						}
-						if(endFile.equals("b"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b;
-						}
-						if(endFile.equals("c"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c;
-						}
-						if(endFile.equals("d"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d;
-						}
-						if(endFile.equals("e"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.e;
-						}
-						if(endFile.equals("f"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f;
-						}
-						if(endFile.equals("g"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g;
-						}
-						if(endFile.equals("h"))
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.h;
-						}
-
-						rp.pieceRank = endRank;
-						
-						
+				King currWK = null;
+				King currBK = null;
+				for(ReturnPiece rp: play.piecesOnBoard)
+				{
+					if(rp.pieceType == ReturnPiece.PieceType.WK){ //attach white king to current White King
+						currWK = (King)rp;
 					}
+					if(rp.pieceType == ReturnPiece.PieceType.BK){ //attach black king to current Black King
+						currBK = (King)rp;
+					}
+
 				}
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				white_currently_checked = currWK.onCheck(play.piecesOnBoard); //returns true if white is checked before move
+				black_currently_checked = currBK.onCheck(play.piecesOnBoard); //returns true if black is checked before move
 
-				if(move.contains("draw?")){
-					play.message = ReturnPlay.Message.DRAW;
-					return play;
-				}
-				
-				//SWITCH COLORS and RETURN PLAY
-				if(currentPlayer == chess.Chess.Player.white)
+				if(white_currently_checked || black_currently_checked) //currently there exists a check before move
 				{
-					currentPlayer = chess.Chess.Player.black;
-					return play;
+					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently white check - white moves and fails to leave check
+						} 
+						else //white moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							white_currently_checked = false; //leave check
+
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentRook))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currBK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+								return play; //white leaves check and simultaneously checkmates black
+							}
+							else if(currBK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								black_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.black; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.black; //player switches
+								play.message = null;
+								return play; //white moves and leaves check
+							}
+						}
+					}
+					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //currently black check - black moves and fails to leave check
+						} 
+						else //black moves and successfully leaves check (future move doesn't result in check)
+						{
+							//move the piece
+							black_currently_checked = false; //leave check
+								for (ReturnPiece rp: play.piecesOnBoard){
+									if(rp.equals(currentRook))
+									{
+										//update the respectiev piece in play.piecesOnBoard
+										if(endFile.equals("a"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.a;
+										}
+										if(endFile.equals("b"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.b;
+										}
+										if(endFile.equals("c"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.c;
+										}
+										if(endFile.equals("d"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+										}
+										if(endFile.equals("e"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.e;
+										}
+										if(endFile.equals("f"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+										}
+										if(endFile.equals("g"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.g;
+										}
+										if(endFile.equals("h"))
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.h;
+										}
+
+										rp.pieceRank = endRank;						
+									}
+								}
+							if(currWK.onCheckMate(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+								return play; //black leaves check and simultaneously checkmates white
+							}
+							else if(currWK.onCheck(play.piecesOnBoard)){
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								white_currently_checked = true;
+								play.message = ReturnPlay.Message.CHECK;
+								currentPlayer = chess.Chess.Player.white; //player switches
+								return play;
+							}
+							else //not check/checkmate after move
+							{
+								if(move.contains("draw?")) //draw overlaps everything
+								{
+									play.message = ReturnPlay.Message.DRAW;
+									return play;
+								}
+								currentPlayer = chess.Chess.Player.white; //player switches
+								play.message = null;
+								return play; //black moves and leaves check
+							}
+						}
+					}	
+
 				}
-				if(currentPlayer == chess.Chess.Player.black)
+				else  //not currently checked before the player moves move
 				{
-					currentPlayer = chess.Chess.Player.white;
-					return play;
-				}
-				if(currentPlayer != chess.Chess.Player.black && currentPlayer != chess.Chess.Player.white)
-				{
-					//System.out.println("There has been an issue and currentPlayer is neither black nor white (in SWITCH COLORS and RETURN PLAY of Chess.java)");
-					return play;
+					//checks if moving puts own King in danger
+					if(currentPlayer == chess.Chess.Player.white)
+					{
+						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+						} 
+					}
+					else if(currentPlayer == chess.Chess.Player.black)
+					{
+						if(currBK.onCheck(play.piecesOnBoard, move)) //simulates the move in future
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							return play; //Not currently check - white moves and puts own king in danger (illegal play)
+
+						} 
+					}
+	
+					//move the piece
+					for (ReturnPiece rp: play.piecesOnBoard){
+						if(rp.equals(currentRook))
+						{
+							//update the respectiev piece in play.piecesOnBoard
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+					}
+					//checks checkmate after piece is moved
+					if(currBK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+						return play;
+					}
+					if(currWK.onCheckMate(play.piecesOnBoard))
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						play.message = ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+						return play;
+					}
+					//checks check after piece is moved
+					if(currWK.onCheck(play.piecesOnBoard) || currBK.onCheck(play.piecesOnBoard)) 
+					{
+						play.message = ReturnPlay.Message.CHECK;
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						//Not currently check -> white or black moves and puts white or black in check
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							return play;
+						} 
+					}					
+					else //not in check after move
+					{
+						if(move.contains("draw?")) //draw overlaps everything
+						{
+							play.message = ReturnPlay.Message.DRAW;
+							return play;
+						}
+						//SWITCH COLORS and RETURN PLAY
+						if(currentPlayer == chess.Chess.Player.white)
+						{
+							currentPlayer = chess.Chess.Player.black;
+							play.message = null;
+							return play;
+						}
+						if(currentPlayer == chess.Chess.Player.black)
+						{
+							currentPlayer = chess.Chess.Player.white;
+							play.message = null;
+							return play;
+						}
+					}
+
 				}	
-			}
+			}//encapsulates move is valid
 		}
-		
-
-
-
-
-		
+				
 		return play;
 	}
+	//end of chess.Chess.play
 
 	/**
 	 * This method should reset the game, and start from scratch.
