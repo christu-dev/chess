@@ -123,7 +123,8 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("bishop picked wrong move ill move");
+					return play;
 				}
 				
 			}
@@ -145,7 +146,8 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("pawn picked wrong move ill move");
+					return play;
 				}
 			}
 			//King check
@@ -166,7 +168,8 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("king picked wrong move ill move");
+					return play;
 				}
 			}
 			//Queen check
@@ -187,7 +190,8 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("queen picked wrong move ill move");
+					return play;
 				}
 			}
 			//Knight check
@@ -208,7 +212,8 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("knight picked wrong move ill move");
+					return play;
 				} 
 			}
 			//Rook check
@@ -229,14 +234,22 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					break;
+					//System.out.println("Rook picked wrong move ill move");
+					return play;
 				}
 			}
-			else //piece doesn't exist.
-			{
-				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			}
+				
+		} //end iterating through pieces.
+
+
+		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null){
+			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			//System.out.println("PIECE DOESNT EXIST");
+			return play;
 		}
+
+
+
 
 		//TODO: if statements for the game state after each piece has gone
 		/*
@@ -245,6 +258,16 @@ public class Chess {
 		 * Validate moves, Check/Checkmate , updating the board, returning play
 		 * 
 		 * 
+		 */
+		/*		Q. If the user is asks for a draw but the move they entered is illegal, is it a draw or an illegal move?
+				A. Since the move happens before the draw, the move is executed first. So it is an illegal move, that is what
+				would be reported, not draw. Which means the player will get another chance to make a move.
+		 * 
+		 * 
+		 * 		YOU CAN ONLY DRAW AFTER A LEGAL MOVE.
+		 * 
+		 * 
+		 * 		For now, draw will take place even after checkmate/check and will overlap both.
 		 */
 
 		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
@@ -255,6 +278,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("bishop invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -262,7 +286,7 @@ public class Chess {
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
 				//MOVING THE Bishop
 				for (ReturnPiece rp: play.piecesOnBoard){
@@ -303,9 +327,15 @@ public class Chess {
 						}
 
 						rp.pieceRank = endRank;
-						
-						
+												
 					}
+				}
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
 				}
 
 				//SWITCH COLORS and RETURN PLAY
@@ -343,6 +373,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("pawn invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -398,6 +429,11 @@ public class Chess {
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
+				}
+
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
 				{
@@ -423,6 +459,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("king invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -430,7 +467,14 @@ public class Chess {
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 
+				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
+				}
 				
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
@@ -457,14 +501,22 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("queen invalid movement ill move");
 				return play;
 			}
 			else //move is valid
 			{
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
+				
+				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
+				}
 				
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
@@ -491,6 +543,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("knight invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -498,7 +551,7 @@ public class Chess {
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 
-				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				//TO DO before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 				
 				//MOVING THE PIECE
 				for (ReturnPiece rp: play.piecesOnBoard){
@@ -543,6 +596,14 @@ public class Chess {
 						
 					}
 				}
+
+				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
+				}
+
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
 				{
@@ -568,6 +629,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				//System.out.println("rook invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -575,7 +637,14 @@ public class Chess {
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 
+				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+
+				if(move.contains("draw?")){
+					play.message = ReturnPlay.Message.DRAW;
+					return play;
+				}
 				
 				//SWITCH COLORS and RETURN PLAY
 				if(currentPlayer == chess.Chess.Player.white)
