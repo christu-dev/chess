@@ -38,7 +38,7 @@ class Pawn extends ReturnPiece {
                     for (ReturnPiece rp : currentBoard) {
                         String checkPos = "" + startFile + (startRank + 1); //temporary space checker
                         if (rp.toString().substring(0, 2).equals(checkPos)) {
-                            System.out.println("There is a piece in the way (Normal Move White Pawn)");
+                            //System.out.println("There is a piece in the way (Normal Move White Pawn)");
                             return false;
                         }
                     }
@@ -53,7 +53,7 @@ class Pawn extends ReturnPiece {
                         String checkPos1 = "" + startFile + (startRank + 1); 
                         String checkPos2 = "" + startFile + (startRank + 2);
                         if (rp.toString().substring(0, 2).equals(checkPos1) || rp.toString().substring(0, 2).equals(checkPos2)) {
-                            System.out.println("There is a piece in the way (Double Move White Pawn)");
+                          //  System.out.println("There is a piece in the way (Double Move White Pawn)");
                             return false;
                         }
                     }
@@ -70,7 +70,7 @@ class Pawn extends ReturnPiece {
                     for (ReturnPiece rp : currentBoard) {
                         String checkPos = "" + startFile + (startRank - 1);
                         if (rp.toString().substring(0, 2).equals(checkPos)) {
-                            System.out.println("There is a piece in the way (Normal Move Black Pawn)");
+                         //   System.out.println("There is a piece in the way (Normal Move Black Pawn)");
                             return false;
                         }
                     }
@@ -81,7 +81,7 @@ class Pawn extends ReturnPiece {
                         String checkPos1 = "" + startFile + (startRank - 1);
                         String checkPos2 = "" + startFile + (startRank - 2);
                         if (rp.toString().substring(0, 2).equals(checkPos1) || rp.toString().substring(0, 2).equals(checkPos2)) {
-                            System.out.println("There is a piece in the way (Double Move Black Pawn)");
+                           // System.out.println("There is a piece in the way (Double Move Black Pawn)");
                             return false;
                         }
                     }

@@ -66,6 +66,8 @@ public class Chess {
 		/* FOLLOWING LINE IS A PLACEHOLDER TO MAKE COMPILER HAPPY */
 		/* WHEN YOU FILL IN THIS METHOD, YOU NEED TO RETURN A ReturnPlay OBJECT */
 
+
+		//resign over everything
 		if(move.equals("resign")){
 			if(currentPlayer == chess.Chess.Player.white){
 				play.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
@@ -75,7 +77,6 @@ public class Chess {
 				play.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
 				return play;
 			}
-
 		}
 
 
@@ -86,7 +87,28 @@ public class Chess {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
 
-		//TODO: Out of board Bounds
+
+		//YOU CANNOT SKIP OR PASS A MOVE. MUST MOVE IF YOU CAN
+		//If Player did not move
+		if (startFile.equals(endFile) && startRank == endRank) {
+            play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			System.out.println("did not move");
+			return play;
+        }
+
+
+
+		//Out of board Bounds
+		if(startFile.charAt(0) < 'a' || startFile.charAt(0) > 'h' || startRank < 1 || startRank > 8){
+			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			System.out.println("out of bounds");
+			return play;
+		}
+		if(endFile.charAt(0) < 'a' || endFile.charAt(0) > 'h' || endRank < 1 || endRank > 8){
+			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			System.out.println("out of bounds");
+			return play;
+		}
 
 		/*System.out.println("Int value of Char: "+startFile+" is "+(int)startFile.charAt(0));
 		System.out.println("Int value of Char: "+endFile+" is "+(int)endFile.charAt(0));
@@ -522,6 +544,47 @@ public class Chess {
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
 				
 				//TO DO Before: check if both kings are in check or checkmate (maybe method? or new class with static method?)
+				
+				for (ReturnPiece rp: play.piecesOnBoard){
+					if(rp.equals(currentQueen))
+					{
+						//update the respectiev piece in play.piecesOnBoard
+						if(endFile.equals("a"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.a;
+						}
+						if(endFile.equals("b"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b;
+						}
+						if(endFile.equals("c"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c;
+						}
+						if(endFile.equals("d"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d;
+						}
+						if(endFile.equals("e"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.e;
+						}
+						if(endFile.equals("f"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f;
+						}
+						if(endFile.equals("g"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g;
+						}
+						if(endFile.equals("h"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.h;
+						}
+						rp.pieceRank = endRank;
+												
+					}
+				}
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
