@@ -94,6 +94,8 @@ public class Chess {
 		
 	
 
+
+		//TODO: return invalid move if piece is not there
 		for (ReturnPiece rp: play.piecesOnBoard){
 	
 			//testing: this WORKS AND arraylist is populated: 
@@ -230,6 +232,10 @@ public class Chess {
 					break;
 				}
 			}
+			else //piece doesn't exist.
+			{
+				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			}
 		}
 
 		//TODO: if statements for the game state after each piece has gone
@@ -241,7 +247,7 @@ public class Chess {
 		 * 
 		 */
 
-		//if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
+		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
 		if(currentBishop != null)
 		{
 
@@ -258,7 +264,7 @@ public class Chess {
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
-				//MOVING THE PIECE
+				//MOVING THE Bishop
 				for (ReturnPiece rp: play.piecesOnBoard){
 					if(rp.equals(currentBishop))
 					{
@@ -330,7 +336,7 @@ public class Chess {
 		 * 
 		 * 
 		 */
-		//if piece found was a Pawn:----------------------------------------------------------------------------------------------------------------
+		//TODO if piece found was a Pawn:----------------------------------------------------------------------------------------------------------------
 		else if(currentPawn != null)
 		{
 			boolean canMove = currentPawn.checkValidMove(play.piecesOnBoard,move);
@@ -343,6 +349,52 @@ public class Chess {
 			{
 				play.message = null;
 				//TO DO Add Piece moving and potential taking (update pieces on Board)
+
+				//TO DO Before, Add if moving would make king in check
+
+				//Moving the Pawn
+				for (ReturnPiece rp: play.piecesOnBoard){
+					if(rp.equals(currentPawn))
+					{
+						//update the respectiev piece in play.piecesOnBoard
+						if(endFile.equals("a"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.a;
+						}
+						if(endFile.equals("b"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b;
+						}
+						if(endFile.equals("c"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c;
+						}
+						if(endFile.equals("d"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d;
+						}
+						if(endFile.equals("e"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.e;
+						}
+						if(endFile.equals("f"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f;
+						}
+						if(endFile.equals("g"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g;
+						}
+						if(endFile.equals("h"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.h;
+						}
+
+						rp.pieceRank = endRank;
+						
+						
+					}
+				}
 
 				//TO DO After: check if both kings are in check or checkmate (maybe method? or new class with static method?)
 
@@ -364,7 +416,7 @@ public class Chess {
 				}				
 			}
 		}
-		//if piece found was a King:----------------------------------------------------------------------------------------------------------------
+		//TODO if piece found was a King:----------------------------------------------------------------------------------------------------------------
 		else if(currentKing != null)
 		{
 			boolean canMove = currentKing.checkValidMove(play.piecesOnBoard,move);
@@ -398,7 +450,7 @@ public class Chess {
 				}	
 			}
 		}
-		//if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
+		//TODO if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
 		else if(currentQueen != null)
 		{
 			boolean canMove = currentQueen.checkValidMove(play.piecesOnBoard,move);
@@ -432,7 +484,7 @@ public class Chess {
 				}	
 			}
 		}
-		//if piece found was a Knight
+		//TODO if piece found was a Knight----------------------------------------------------------------------------------
 		else if(currentKnight != null)
 		{
 			boolean canMove = currentKnight.checkValidMove(play.piecesOnBoard,move);
@@ -509,7 +561,7 @@ public class Chess {
 				}	
 			}
 		}
-		//if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
+		//TODO if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
 		else if(currentRook != null)
 		{
 			boolean canMove = currentRook.checkValidMove(play.piecesOnBoard,move);
@@ -616,9 +668,9 @@ public class Chess {
 		WP3.pieceFile = ReturnPiece.PieceFile.c; WP3.pieceRank = 2;
 		play.piecesOnBoard.add(WP3);
 		//D2
-		/*ReturnPiece WP4 = new Pawn(true);
+		ReturnPiece WP4 = new Pawn(true);
 		WP4.pieceFile = ReturnPiece.PieceFile.d; WP4.pieceRank = 2;
-		play.piecesOnBoard.add(WP4);*/
+		play.piecesOnBoard.add(WP4);
 		//E2
 		ReturnPiece WP5 = new Pawn(true);
 		WP5.pieceFile = ReturnPiece.PieceFile.e; WP5.pieceRank = 2;
