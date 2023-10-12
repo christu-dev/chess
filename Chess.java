@@ -66,6 +66,18 @@ public class Chess {
 		/* FOLLOWING LINE IS A PLACEHOLDER TO MAKE COMPILER HAPPY */
 		/* WHEN YOU FILL IN THIS METHOD, YOU NEED TO RETURN A ReturnPlay OBJECT */
 
+		if(move.equals("resign")){
+			if(currentPlayer == chess.Chess.Player.white){
+				play.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
+				return play;
+			}
+			else if(currentPlayer == chess.Chess.Player.black){
+				play.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
+				return play;
+			}
+
+		}
+
 
 		String startFile = move.substring(0,1);
 		int startRank = Integer.parseInt(move.substring(1,2));
@@ -684,6 +696,7 @@ public class Chess {
 		play = new ReturnPlay();
 		play.piecesOnBoard = new ArrayList<ReturnPiece>();
 		play.piecesOnBoard.clear();
+		play.message = null;
 
 	
 		//make a ReturnPiece object for every piece, and define its enums and fields
