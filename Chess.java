@@ -346,6 +346,19 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							//Capture Check
+						
+							if(Capture.canCapture(play.piecesOnBoard, move, currentBishop.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentBishop))
 									{
@@ -430,6 +443,20 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+							//Capture Check
+							
+							if(Capture.canCapture(play.piecesOnBoard, move, currentBishop.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentBishop))
 									{
@@ -527,6 +554,19 @@ public class Chess {
 					}
 	
 					//move the piece
+					//Capture Check
+						
+						if(Capture.canCapture(play.piecesOnBoard, move, currentBishop.white)){
+							ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+							play.piecesOnBoard = tempboard; //call this right before any move is made
+						}
+						else
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							System.out.println("Cannot move there.");
+							return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+						}
+							
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentBishop))
 						{

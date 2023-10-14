@@ -9,7 +9,7 @@ public class Capture {
 
         if(white == true){ //piece is white
             for (ReturnPiece piece : currentBoard) {
-                if (piece.toString().substring(0,2).equals(""+endFile+endRank) && piece.toString().substring(3,4).equals("W")) 
+                if (piece.toString().substring(0,4).equals(""+endFile+endRank+":W")) 
                 {
                     System.out.println("white piece trying to take white piece");
                     return false; //it's in the target space and is same color (white), can't capture
@@ -19,7 +19,7 @@ public class Capture {
         else if(white == false) //piece is black
         {
             for (ReturnPiece piece : currentBoard) {
-                if (piece.toString().substring(0,2).equals(""+endFile+endRank) && piece.toString().substring(3,4).equals("B")) 
+                if (piece.toString().substring(0,4).equals(""+endFile+endRank+":B")) 
                 {
                     System.out.println("black piece trying to take black piece");
                     return false; //it's in the target space and is the same color (black), can't capture
