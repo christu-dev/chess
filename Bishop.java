@@ -2,13 +2,19 @@ package chess;
 import java.util.ArrayList;
 
 class Bishop extends ReturnPiece {
+	boolean white;
 
 	Bishop(boolean white)
 	{
-		if(white == true)
-		this.pieceType = ReturnPiece.PieceType.WB;
-		else
-		this.pieceType = ReturnPiece.PieceType.BB;
+		if(white == true){
+			this.pieceType = ReturnPiece.PieceType.WB;
+			this.white = true;
+		}
+		else{
+			this.pieceType = ReturnPiece.PieceType.BB;
+			this.white = false;
+		}
+		
 	}
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{

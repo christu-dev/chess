@@ -2,13 +2,20 @@ package chess;
 import java.util.ArrayList;
 
 class Queen extends ReturnPiece {
+	boolean white;
 
 	Queen(boolean white)
 	{
-		if(white == true)
+		if(white == true){
 		this.pieceType = ReturnPiece.PieceType.WQ;
+		this.white = true;
+		}
 		else
+		{
 		this.pieceType = ReturnPiece.PieceType.BQ;
+		this.white = false;
+		}
+		
 	}
 
 	//checks if piece is in the way

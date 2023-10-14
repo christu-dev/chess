@@ -3,14 +3,23 @@ import java.util.ArrayList;
 
 class Pawn extends ReturnPiece {
 	boolean firstMoved; //checking if it has moved first already (for en passant)
+    boolean white;
 
 	Pawn(boolean white)
 	{
-		if(white == true)
-		this.pieceType = ReturnPiece.PieceType.WP;
+		if(white == true){
+        this.pieceType = ReturnPiece.PieceType.WP;
+        this.firstMoved = false;
+        this.white = true;
+        }
+		
 		else
-		this.pieceType = ReturnPiece.PieceType.BP;
+        {
+        this.pieceType = ReturnPiece.PieceType.BP;
 		this.firstMoved = false;
+        this.white = false;
+        }
+		
 	}
 	boolean hasFirstMoved(){ //for en passant
 		return firstMoved;
@@ -28,7 +37,8 @@ class Pawn extends ReturnPiece {
         int rankDiff = endRank - startRank;
         int fileDiff = (int)startFile - (int)endFile;
 
-		if (startFile == endFile) { //if it stays in the same file (letter)
+		if (startFile == endFile) 
+        { //if it stays in the same file (letter)
 
             if (this.pieceType == ReturnPiece.PieceType.WP) {
                 if (rankDiff == 1) {
@@ -91,14 +101,11 @@ class Pawn extends ReturnPiece {
                 }
             }
         }
-        else  //move diagonal one is valid is canPawnCapture returns true;
-        {
-            if(Capture.canPawnCapture(currentBoard, move, this.white))
-            {
-                 return true;
-            } 
+        else if(Capture.canPawnCapture(currentBoard, move, this.white)){
+            
+                 return true;       
         }
-
+        System.out.println("Regular move validate failed. canPawnCapture failed.");
         return false; //all other moves are wrong
     }
 }

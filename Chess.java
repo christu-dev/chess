@@ -680,6 +680,9 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							    ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
+								play.piecesOnBoard = tempboard; //call this right before any move is made.
+								
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentPawn))
 									{
@@ -716,7 +719,6 @@ public class Chess {
 										{
 											rp.pieceFile = ReturnPiece.PieceFile.h;
 										}
-
 										rp.pieceRank = endRank;						
 									}
 								}
@@ -764,6 +766,10 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+								ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
+								play.piecesOnBoard = tempboard; //call this right before any move is made.
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentPawn))
 									{
@@ -861,6 +867,9 @@ public class Chess {
 					}
 	
 					//move the piece
+					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
+					play.piecesOnBoard = tempboard; //call this right before any move is made.
+
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentPawn))
 						{

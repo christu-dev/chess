@@ -4,6 +4,7 @@ import java.util.ArrayList;
 class King extends ReturnPiece 
 {
 	private boolean castlingDone = false; //castling CAN BE DONE ONCE
+	boolean white;
 	
 
 	/*
@@ -21,9 +22,16 @@ class King extends ReturnPiece
 	King(boolean white) //constructor and differentiates color for piece
 	{
 		if(white == true)
-		this.pieceType = ReturnPiece.PieceType.WK;
+		{
+			this.pieceType = ReturnPiece.PieceType.WK;
+			this.white = true;
+		}
 		else
-		this.pieceType = ReturnPiece.PieceType.BK;
+		{
+			this.pieceType = ReturnPiece.PieceType.BK;
+			this.white = false;
+		}
+		
 	}
 	public boolean isCastlingDone()
 	{

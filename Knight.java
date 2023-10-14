@@ -2,12 +2,20 @@ package chess;
 import java.util.ArrayList;
 
 class Knight extends ReturnPiece {
+    boolean white;
 	Knight(boolean white)
 	{
 		if(white == true)
-		this.pieceType = ReturnPiece.PieceType.WN;
+        {
+            this.pieceType = ReturnPiece.PieceType.WN;
+            this.white = true;
+        }
 		else
-		this.pieceType = ReturnPiece.PieceType.BN;
+        {
+            this.pieceType = ReturnPiece.PieceType.BN;
+            this.white=false;
+        }
+		
 	}
 	
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move) 

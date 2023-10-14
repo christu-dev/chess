@@ -2,12 +2,20 @@ package chess;
 import java.util.ArrayList;
 
 class Rook extends ReturnPiece {
+	boolean white;
 	Rook(boolean white)
 	{
 		if(white == true)
-		this.pieceType = ReturnPiece.PieceType.WR;
+		{
+			this.pieceType = ReturnPiece.PieceType.WR;
+			this.white = true;
+		}
 		else
-		this.pieceType = ReturnPiece.PieceType.BR;
+		{
+			this.pieceType = ReturnPiece.PieceType.BR;
+			this.white = false;
+		}
+		
 	}
 
 	private boolean isOccupied(ArrayList<ReturnPiece> currentBoard, char file, int rank) 
