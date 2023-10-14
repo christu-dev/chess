@@ -358,6 +358,14 @@ public class Chess {
 								System.out.println("Cannot move there.");
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
+							//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentBishop))
@@ -455,6 +463,15 @@ public class Chess {
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
 								System.out.println("Cannot move there.");
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+							//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
 							}
 
 								for (ReturnPiece rp: play.piecesOnBoard){
@@ -566,6 +583,15 @@ public class Chess {
 							System.out.println("Cannot move there.");
 							return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 						}
+
+					//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
 							
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentBishop))
@@ -722,6 +748,19 @@ public class Chess {
 
 							    ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
 								play.piecesOnBoard = tempboard; //call this right before any move is made.
+
+							//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp == currentPawn)
+								{
+									continue;
+								}
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
 								
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentPawn))
@@ -809,6 +848,20 @@ public class Chess {
 
 								ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
 								play.piecesOnBoard = tempboard; //call this right before any move is made.
+
+
+								//en passant limiter
+								for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp == currentPawn)
+								{
+									continue;
+								}
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentPawn))
@@ -909,6 +962,19 @@ public class Chess {
 					//move the piece
 					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
 					play.piecesOnBoard = tempboard; //call this right before any move is made.
+
+                    //en passant limiter
+								for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp == currentPawn)
+								{
+									continue;
+								}
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
 
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentPawn))
@@ -1061,6 +1127,28 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKing.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKing))
 									{
@@ -1145,6 +1233,29 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKing.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKing))
 									{
@@ -1242,6 +1353,29 @@ public class Chess {
 					}
 	
 					//move the piece
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKing.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentKing))
 						{
@@ -1393,6 +1527,28 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentQueen.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentQueen))
 									{
@@ -1477,6 +1633,28 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentQueen.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+							
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentQueen))
 									{
@@ -1572,8 +1750,31 @@ public class Chess {
 
 						} 
 					}
-	
 					//move the piece
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentQueen.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+	
+					
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentQueen))
 						{
@@ -1725,6 +1926,28 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKnight.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKnight))
 									{
@@ -1809,6 +2032,29 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKnight.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKnight))
 									{
@@ -1906,6 +2152,29 @@ public class Chess {
 					}
 	
 					//move the piece
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentKnight.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentKnight))
 						{
@@ -2057,6 +2326,28 @@ public class Chess {
 							//move the piece
 							white_currently_checked = false; //leave check
 
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentRook.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+							
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentRook))
 									{
@@ -2141,6 +2432,29 @@ public class Chess {
 						{
 							//move the piece
 							black_currently_checked = false; //leave check
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentRook.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentRook))
 									{
@@ -2238,6 +2552,29 @@ public class Chess {
 					}
 	
 					//move the piece
+
+							//Capture Check
+
+							if(Capture.canCapture(play.piecesOnBoard, move, currentRook.white)){
+								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+								play.piecesOnBoard = tempboard; //call this right before any move is made
+							}
+							else
+							{
+								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+								System.out.println("Cannot move there.");
+								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+							}
+
+												//en passant limiter
+							for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									tempPawn.notFirstMoved();
+									rp = tempPawn;
+								}
+							}
+
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentRook))
 						{

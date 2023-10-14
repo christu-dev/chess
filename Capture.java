@@ -2,6 +2,25 @@ package chess;
 import java.util.ArrayList;
 
 public class Capture {
+
+    /*
+     * 
+     * 
+     * All movement validation checks intermediary steps bewteen start position and end position (non inclusive)
+     * 
+     * Capture.canCapture and Capture.canPawnCapture returns true if and only if:
+     * 1) end position is empty
+     * 2) end popsition is a valid capture state for a piece
+     * 
+     * In essence, Capture implements collision methods.
+     * 
+     * 
+     * Furthermore, Capture has .takePiece and .pawntakePiece
+     * which returns the board after the piece has been taken.
+     * 
+     * 
+     * 
+     */
     public static boolean canCapture(ArrayList<ReturnPiece> currentBoard, String move, boolean white){
 
         char endFile = move.substring(3,4).toLowerCase().charAt(0);
@@ -171,17 +190,12 @@ public class Capture {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
         ReturnPiece removedPiece = null;
+
+        //finds en passant piece
         for (ReturnPiece piece : tempBoard){
-            if (piece.toString().substring(0,2).equals(""+endFile+endRank))
+            if(white)
             {
-                removedPiece = piece; //only removes if there is a piece there
-            }
-            if (piece.toString().substring(0,2).equals(""+endFile+endRank))
-            {
-                removedPiece = piece; //only removes if there is a piece there
-            }
-            if(white){
-                if (piece.toString().equals(""+endFile+(endRank-1)+":BP"))
+            if (piece.toString().equals(""+endFile+(endRank-1)+":BP"))
                 {
                     removedPiece = piece;
                 }
@@ -193,6 +207,21 @@ public class Capture {
                 }
             } 
         }
+
+        //comes after finding en passant piece to avoid trouble at front lines
+        for (ReturnPiece piece : tempBoard){
+
+            if (piece.toString().substring(0,2).equals(""+endFile+endRank))
+            {
+                removedPiece = piece; //only removes if there is a piece there
+            }
+
+        }
+
+
+
+
+
         if(removedPiece != null)
         {
             tempBoard.remove(removedPiece);
@@ -200,5 +229,6 @@ public class Capture {
         }
         return tempBoard;
     }
+    
 
 } //class body

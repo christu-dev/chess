@@ -22,8 +22,11 @@ class Pawn extends ReturnPiece {
 		
 	}
 	boolean hasFirstMoved(){ //for en passant
-		return firstMoved;
+		return this.firstMoved;
 	}
+    void notFirstMoved(){
+        this.firstMoved = false;
+    }
 		
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{	
