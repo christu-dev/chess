@@ -25,11 +25,10 @@ class Pawn extends ReturnPiece {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
 
-
+        int rankDiff = endRank - startRank;
+        int fileDiff = (int)startFile - (int)endFile;
 
 		if (startFile == endFile) { //if it stays in the same file (letter)
-          
-            int rankDiff = endRank - startRank;
 
             if (this.pieceType == ReturnPiece.PieceType.WP) {
                 if (rankDiff == 1) {
@@ -42,6 +41,7 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
+                    this.firstMoved = false;
                     return true; //no piece in the way, validate pawn movement
                 } 
 
@@ -74,6 +74,7 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
+                    this.firstMoved = false;
                     return true;
                 } else if (rankDiff == -2 && startRank == 7) {
                     
@@ -90,7 +91,15 @@ class Pawn extends ReturnPiece {
                 }
             }
         }
-        return false; //wrong move
+        else  //move diagonal one is valid is canPawnCapture returns true;
+        {
+            if(Capture.canPawnCapture(currentBoard, move, this.white))
+            {
+                 return true;
+            } 
+        }
+
+        return false; //all other moves are wrong
     }
 }
 

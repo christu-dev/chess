@@ -104,7 +104,7 @@ public class Chess {
 
 
 
-		//Out of board Bounds
+		//Illegal State: Out of board Bounds
 		if(startFile.charAt(0) < 'a' || startFile.charAt(0) > 'h' || startRank < 1 || startRank > 8){
 			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
 			//System.out.println("out of bounds");
@@ -116,14 +116,7 @@ public class Chess {
 			return play;
 		}
 
-		/*System.out.println("Int value of Char: "+startFile+" is "+(int)startFile.charAt(0));
-		System.out.println("Int value of Char: "+endFile+" is "+(int)endFile.charAt(0));
-		int difference = Math.abs((int)startFile.charAt(0)-(int)endFile.charAt(0));
-		System.out.println("Their difference is "+ difference);
-		System.out.println("The char b should have a value of 98. Print 98 from b: "+(int)'b');*/
-
-
-		//curerntPieces
+		//have a suite of current ReturnPiece objects, then player validation/move validation/check validation is split based on
 		Bishop currentBishop = null;
 		Pawn currentPawn = null;
 		King currentKing = null;
@@ -135,16 +128,15 @@ public class Chess {
 	
 
 
-		//TODO: return invalid move if piece is not there
+		//COLOR VALIDATION BASED ON PIECE----------------------------------------------------------------------------------------
 		for (ReturnPiece rp: play.piecesOnBoard){
 	
 			//testing: this WORKS AND arraylist is populated: 
 			//System.out.println(rp.toString());
 			//System.out.println(rp.toString().substring(0,2));
-
 			//FIND TYPE OF PIECE AT ORIGIN
 
-			//Bishop Check
+			//Bishop Check-------------
 			if(move.substring(0, 2).equals(rp.toString().substring(0,2)) && rp instanceof Bishop) //find the piece and attach it to current piece
 			{
 				//check if the piece belongs to player
@@ -168,7 +160,7 @@ public class Chess {
 				}
 				
 			}
-			//Pawn check
+			//Pawn check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Pawn) //find the piece and attach it to current piece
 			{
 				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WP)
@@ -190,7 +182,7 @@ public class Chess {
 					return play;
 				}
 			}
-			//King check
+			//King check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof King) //find the piece and attach it to current piece
 			{
 				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WK)
@@ -212,7 +204,7 @@ public class Chess {
 					return play;
 				}
 			}
-			//Queen check
+			//Queen check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Queen) //find the piece and attach it to current piece
 			{
 				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WQ)
@@ -234,7 +226,7 @@ public class Chess {
 					return play;
 				}
 			}
-			//Knight check
+			//Knight check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
 			{
 				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WN)
@@ -256,7 +248,7 @@ public class Chess {
 					return play;
 				} 
 			}
-			//Rook check
+			//Rook check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
 			{
 				if(currentPlayer == chess.Chess.Player.white && rp.pieceType == ReturnPiece.PieceType.WR)
@@ -279,7 +271,7 @@ public class Chess {
 				}
 			}
 				
-		} //end iterating through pieces.
+		} //end iterating through pieces for COLOR validation
 
 
 		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null){
@@ -288,80 +280,27 @@ public class Chess {
 			return play;
 		}
 
-
-
-
-		//TODO: if statements for the game state after each piece has gone
-		/*
+		/*		
+		 *
+		 *      Q. If the user is asks for a draw but the move they entered is illegal, is it a draw or an illegal move?
+		 * 		A. Since the move happens before the draw, the move is executed first. So it is an illegal move, that is what
+		 *		would be reported, not draw. Which means the player will get another chance to make a move.
 		 * 
 		 * 
-		 * Validate moves, Check/Checkmate , updating the board, returning play
+		 * 		"YOU CAN ONLY DRAW AFTER A LEGAL MOVE"
 		 * 
 		 * 
-		 */
-		/*		Q. If the user is asks for a draw but the move they entered is illegal, is it a draw or an illegal move?
-				A. Since the move happens before the draw, the move is executed first. So it is an illegal move, that is what
-				would be reported, not draw. Which means the player will get another chance to make a move.
-		 * 
-		 * 
-		 * 		YOU CAN ONLY DRAW AFTER A LEGAL MOVE.
-		 * 
-		 * 
-		 * 		For now, draw will take place even after checkmate/check and will overlap both.
+		 * 		!!! For now, draw will take place even after checkmate/check and will overlap both.
 		 * 
 		 * 
 		 * 		
 		 * 		
-		 * 	 	
+		 * 	
 		 * 		RIght after move VALIDATION is CHECK VALIDATION: run if both Kings are in Check using King.onCheck(currentBoard)
-		 * 
-		 * 
-		 * 		
-		 * 		static boolean currently_checked = (WhiteKing.onCheck && BlackKing.onCheck) //true if in check, false if not
-		 * 		
-		 * 		
-		 * 
-		 * 		
-		 *		
-		 *
-		 *      IF CHECK VALIDATION FAILS, DO NOT ACTUALLY MOVE THE PIECE. (CHECK FOR OWN PIECES BLOCKING)
-		 * 
-		 *      TODO AFTER Move and Then Check VALIDATION: CALL UPON CAPTURE VALIDATION, AND UPDATE BOARD OF CAPTURE AFTERWARDS
-		 *        - check if target space has own piece
-		 * 		  - check if target space is an enemy king
-		 * 		
-		 * 		Check is king is in check. might have to update board, then revert board.
-		 * 
-		 * 		
-		 * 		
-		 * 
-		 * 		
-		 * 
+		 * 		Many check -> uncheck, uncheck -> check game states
+		 * 		all covered by 10/12/2023 commits
 		 * 
 		 */
-		/*
-
-				currently_checked = (WhiteKing.onCheck || BlackKing.onCheck)
-
-		 * 		if currently_checked = true, {
-		 * 			if check_initiated == true (that means it has been true)
-		 * 				-illegal move, return play //move hasn't fixed the check
-		 * 			else if check_initiated == false
-		 * 				-check_initiated = true; (check just became in play)
-		 * 					-//MOVE THE PIECE
-		 * 					
-		 * 					-message = check 
-		 * 					return play
-		 * 		}
-		 * 		else
-		 * 		{
-		 * 			check_initiated = false;
-		 * 			message = null
-		 *
-		 * 		 	//MOVE THE PIECE
-		 * 			return play
-		 * 			
-		 * 		} */
 
 		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
 		if(currentBishop != null)
