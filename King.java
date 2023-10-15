@@ -128,19 +128,20 @@ class King extends ReturnPiece
 				{
 
 					bishopCheck:
-					if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BB : ReturnPiece.PieceType.WB)) //successfully finds bishop in diagonal
+					if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BB : ReturnPiece.PieceType.WB)) //successfully finds opposite bishop in diagonal
 					{
 
 						int x = (int)kingFile + FileOffset;
 
 						
-						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1)); y += RankOffset)
+						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1,2)); y += RankOffset)
 						{
 							for (ReturnPiece rp: currentBoard)
 							{
 								String checkPos = ""+(char)x+y+"";
 								if(rp.toString().substring(0,2).equals(checkPos))
 								{
+									System.out.println("Something in the way of bishop diagonal");
 									break bishopCheck; 
 								}
 							}
@@ -148,6 +149,7 @@ class King extends ReturnPiece
 						}
 
 						//only comes here if there is nothing in the way
+						
 						return true;
 
 					}
@@ -157,13 +159,14 @@ class King extends ReturnPiece
 					{
 						int x = (int)kingFile + FileOffset;
 
-						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1)); y += RankOffset)
+						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1,2)); y += RankOffset)
 						{
 							for (ReturnPiece rp: currentBoard)
 							{
 								String checkPos = ""+(char)x+y+"";
 								if(rp.toString().substring(0,2).equals(checkPos))
 								{
+									System.out.println("Something in the way of queen diagonal");
 									break queenCheck; 
 								}
 							}
@@ -171,6 +174,7 @@ class King extends ReturnPiece
 						}
 
 						//only comes here if there is nothing in the way
+						
 						return true;
 					}
 					/*
@@ -185,9 +189,151 @@ class King extends ReturnPiece
 				} 
 			}//end diagonal check	
 			//something was in the way of the diagonal or there is no danger from diagonals.
+			
+
+			//CHECKING IF VULNERABLE TO horizontals and verticals (ROOK AND QUEEN)------------------------------------------------------------------------------------------
+			for (ReturnPiece piece : currentBoard) 
+			{
+				String piecePosition = piece.toString().substring(0, 2);
+		
+				//distance from king to piece
+				int fileDifference = Math.abs(kingFile - piecePosition.charAt(0));
+				int rankDifference = Math.abs(kingRank - Integer.parseInt(piecePosition.substring(1,2)));
+
+				int FileOffset = 0; 
+				int RankOffset = 0; //x = Column, y = row;
+
+					if(kingRank < Integer.parseInt(piecePosition.substring(1)))
+					{ 
+						RankOffset = 1;
+					}
+					if(kingRank > Integer.parseInt(piecePosition.substring(1)))
+					{
+						RankOffset = -1;
+					}
+					if(kingFile < piecePosition.charAt(0))
+					{
+						FileOffset = 1;
+					}
+					if(kingFile > piecePosition.charAt(0)){
+						FileOffset = -1;
+					}
+
+
+
+					if (fileDifference == 0) //only considers vertical
+					{
+						rookCheck:
+						if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BR : ReturnPiece.PieceType.WR)) //successfully finds rook in vertical
+						{
+
+							for (int rank = kingRank + RankOffset; rank != Integer.parseInt(piecePosition.substring(1,2)); rank += RankOffset) 
+								{
+									for (ReturnPiece rp: currentBoard)
+									{
+										String checkPos = ""+(char)kingFile+""+rank+"";
+										if(rp.toString().substring(0,2).equals(checkPos))
+										{
+											System.out.println("Something in the way of rook vertical");
+											break rookCheck; 
+										}
+									}
+
+								}
+							//only comes here if there is nothing in the way
+							return true;
+
+						}
+
+						queenCheck:
+						if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BQ : ReturnPiece.PieceType.WQ))  //successfully finds queen in vertical
+						{
+							for (int rank = kingRank + RankOffset; rank != Integer.parseInt(piecePosition.substring(1)); rank += RankOffset) 
+								{
+									for (ReturnPiece rp: currentBoard)
+									{
+										String checkPos = ""+(char)kingFile+""+rank+"";
+										if(rp.toString().substring(0,2).equals(checkPos))
+										{
+											System.out.println("Something in the way of queen vertical");
+											break queenCheck; 
+										}
+									}
+
+								}
+							//only comes here if there is nothing in the way
+							return true;
+						}
+					}//end of vertical check
+					if (rankDifference == 0) //only considers horizontal
+					{
+						rookCheck:
+						if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BR : ReturnPiece.PieceType.WR)) //successfully finds rook in horizontal
+						{
+							for (char file = (char)(kingFile + FileOffset); file != piecePosition.charAt(0); file += FileOffset) 
+							{
+								for (ReturnPiece rp: currentBoard)
+									{
+										String checkPos = ""+(char)file+""+kingRank+"";
+										if(rp.toString().substring(0,2).equals(checkPos))
+										{
+											System.out.println("Something in the way of rook horizontal");
+											break rookCheck; 
+										}
+									}
+							}
+							//only comes here if there is nothing in the way
+							return true;
+						}
+
+						queenCheck:
+						if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BQ : ReturnPiece.PieceType.WQ))  //successfully finds queen in honrizontal
+						{
+							for (char file = (char)(kingFile + FileOffset); file != piecePosition.charAt(0); file += FileOffset) 
+							{
+								for (ReturnPiece rp: currentBoard)
+									{
+										String checkPos = ""+(char)file+""+kingRank+"";
+										if(rp.toString().substring(0,2).equals(checkPos))
+										{
+											System.out.println("Something in the way of queen horizontal");
+											break queenCheck; 
+										}
+									}
+							}
+							//only comes here if there is nothing in the way
+							return true;	
+						}						
+					}//end of horizontal check
+
+					/*
+					 * 
+					 * 
+					 * 
+					 * 
+					 * 
+					 * 
+					 */			
+
+				
+			} //end horizontal and vertical check
+			//something was in the way of the horizontal/vertical or there is no danger from horizontal/vertical.
+
+
+
 
 		return false; 
 	}
+	private boolean isOccupied(ArrayList<ReturnPiece> currentBoard, char file, int rank) 
+	{ 
+        for (ReturnPiece piece : currentBoard) {
+            if (piece.toString().substring(0,2).equals(""+file+rank)) 
+			{
+                return true;
+            }
+        }
+        return false;
+    }
 	
 	
 
