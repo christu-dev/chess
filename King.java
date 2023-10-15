@@ -10,11 +10,6 @@ class King extends ReturnPiece
 	/*
 	 * 
 	 * 
-	 *  TODO: WRITE A METHOD CALLED King.onCheck
-	 * 
-	 * 	TODO: Later: Write a method called King.onCheckmate;
-	 * 
-	 * 
 	 * 	AFTER EVERY MOVE VALIDATION, CHECK IF CHECK OCCURS OR CHECK IS STOPPED using chess.Chess's static boolean check_initiated
 	 * 	Both kings are checked.
 	 * 
@@ -317,23 +312,33 @@ class King extends ReturnPiece
 
 				
 			} //end horizontal and vertical check
-			//something was in the way of the horizontal/vertical or there is no danger from horizontal/vertical.
+			//something was in the way of the horizontal/vertical OR there is no danger from horizontal/vertical.
+
+			//CHECKING IF VULNERABLE TO KING
+			//(WILL NEVER HIT NORMALLY BUT WILL BE NECESSARY FOR ONCHECK(BOARD MOVE) To prevent king facing king
+			for (ReturnPiece piece : currentBoard) 
+			{
+				String piecePosition = piece.toString().substring(0, 2);
+		
+				//distance from king to piece
+				int fileDifference = Math.abs(kingFile - piecePosition.charAt(0));
+				int rankDifference = Math.abs(kingRank - Integer.parseInt(piecePosition.substring(1,2)));
+	
+				if (fileDifference <= 1 && rankDifference <= 1 && ( (this.white && piece.pieceType == ReturnPiece.PieceType.BK) || (!this.white && piece.pieceType == ReturnPiece.PieceType.WK) ) )//only considers direct vicinity kings
+				{ //all within 1 space
+					return true;
+				} 
+			}
+
+
+
 
 
 
 
 		return false; 
 	}
-	private boolean isOccupied(ArrayList<ReturnPiece> currentBoard, char file, int rank) 
-	{ 
-        for (ReturnPiece piece : currentBoard) {
-            if (piece.toString().substring(0,2).equals(""+file+rank)) 
-			{
-                return true;
-            }
-        }
-        return false;
-    }
+
 	
 	
 
