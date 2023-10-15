@@ -61,7 +61,7 @@ class King extends ReturnPiece
 			String downLeft = "" + (char)(kingFile - 1) + (kingRank - 1);
 
 
-			//CHECKING IF VULNERABLE TO PAWN
+			//CHECKING IF VULNERABLE TO PAWN------------------------------------------------------------------------------------------
 			for (ReturnPiece piece : currentBoard) {
 				if ((this.white && (piece.toString().substring(3,4).equals("B"))) || (!this.white && (piece.toString().substring(3,4).equals("W"))) ) {
 					String piecePosition = piece.toString().substring(0, 2);
@@ -73,7 +73,7 @@ class King extends ReturnPiece
 					}
 				}
 			}
-			//CHECKING IF VULNERABLE TO KNIGHT
+			//CHECKING IF VULNERABLE TO KNIGHT------------------------------------------------------------------------------------------
 			String[] knightPositions = {
 				"" + (char)(kingFile + 1) + (kingRank + 2),
 				"" + (char)(kingFile - 1) + (kingRank + 2),
@@ -97,10 +97,96 @@ class King extends ReturnPiece
 					}
 				}
 			}
+			//CHECKING IF VULNERABLE TO DIAGONALS (BISHOP AND QUEEN)------------------------------------------------------------------------------------------
+			
+		 	for (ReturnPiece piece : currentBoard) 
+			{
+				String piecePosition = piece.toString().substring(0, 2);
+		
+				//distance from king to piece
+				int fileDifference = Math.abs(kingFile - piecePosition.charAt(0));
+				int rankDifference = Math.abs(kingRank - Integer.parseInt(piecePosition.substring(1)));
+
+				int FileOffset, RankOffset; //x = Column, y = row;
+
+					if(kingRank < Integer.parseInt(piecePosition.substring(1))){ 
+						RankOffset = 1;
+					}
+					else
+					{
+						RankOffset = -1;
+					}
+					if(kingFile < piecePosition.charAt(0)){
+						FileOffset = 1;
+					}
+					else{
+						FileOffset = -1;
+					}
 
 
+				if (fileDifference == rankDifference) //only considers diagonal pieces
+				{
 
-			return false;
+					bishopCheck:
+					if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BB : ReturnPiece.PieceType.WB)) //successfully finds bishop in diagonal
+					{
+
+						int x = (int)kingFile + FileOffset;
+
+						
+						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1)); y += RankOffset)
+						{
+							for (ReturnPiece rp: currentBoard)
+							{
+								String checkPos = ""+(char)x+y+"";
+								if(rp.toString().substring(0,2).equals(checkPos))
+								{
+									break bishopCheck; 
+								}
+							}
+						x += FileOffset;
+						}
+
+						//only comes here if there is nothing in the way
+						return true;
+
+					}
+
+					queenCheck:
+					if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BQ : ReturnPiece.PieceType.WQ))  //successfully finds queen in diagonal
+					{
+						int x = (int)kingFile + FileOffset;
+
+						for(int y = kingRank + RankOffset; y != Integer.parseInt(piecePosition.substring(1)); y += RankOffset)
+						{
+							for (ReturnPiece rp: currentBoard)
+							{
+								String checkPos = ""+(char)x+y+"";
+								if(rp.toString().substring(0,2).equals(checkPos))
+								{
+									break queenCheck; 
+								}
+							}
+						x += FileOffset;
+						}
+
+						//only comes here if there is nothing in the way
+						return true;
+					}
+					/*
+					 * 
+					 * 
+					 * 
+					 * 
+					 * 
+					 * 
+					 */			
+
+				} 
+			}//end diagonal check	
+			//something was in the way of the diagonal or there is no danger from diagonals.
+
+		return false; 
 	}
 	
 	
