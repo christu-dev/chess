@@ -46,18 +46,68 @@ class King extends ReturnPiece
 	
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoard) //returns true if passed board parameter is in check
 	{ 
-		
-		
-		//TODO: finish OnCheck
+		/*System.out.println("On check was called on " + this.toString());	*/
 
-		return false;
+		
+			String kingPosition = this.toString().substring(0, 2);
+	
+			char kingFile = kingPosition.charAt(0);
+			int kingRank = Integer.parseInt(kingPosition.substring(1));
+	
+			String upRight = "" + (char)(kingFile + 1) + (kingRank + 1);
+			String upLeft = "" + (char)(kingFile - 1) + (kingRank + 1);
+	
+			String downRight = "" + (char)(kingFile + 1) + (kingRank - 1);
+			String downLeft = "" + (char)(kingFile - 1) + (kingRank - 1);
+
+
+			//CHECKING IF VULNERABLE TO PAWN
+			for (ReturnPiece piece : currentBoard) {
+				if ((this.white && (piece.toString().substring(3,4).equals("B"))) || (!this.white && (piece.toString().substring(3,4).equals("W"))) ) {
+					String piecePosition = piece.toString().substring(0, 2);
+	
+					if (piecePosition.equals(upRight) || piecePosition.equals(upLeft) ||piecePosition.equals(downRight) || piecePosition.equals(downLeft)) {
+					   if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BP : ReturnPiece.PieceType.WP)) {
+							return true;
+						}
+					}
+				}
+			}
+			//CHECKING IF VULNERABLE TO KNIGHT
+			String[] knightPositions = {
+				"" + (char)(kingFile + 1) + (kingRank + 2),
+				"" + (char)(kingFile - 1) + (kingRank + 2),
+				"" + (char)(kingFile + 2) + (kingRank + 1),
+				"" + (char)(kingFile - 2) + (kingRank + 1),
+				"" + (char)(kingFile + 1) + (kingRank - 2),
+				"" + (char)(kingFile - 1) + (kingRank - 2),
+				"" + (char)(kingFile + 2) + (kingRank - 1),
+				"" + (char)(kingFile - 2) + (kingRank - 1)
+			};
+			for (ReturnPiece piece : currentBoard) 
+			{
+				if ((this.white && (piece.toString().substring(3,4).equals("B"))) || (!this.white && (piece.toString().substring(3,4).equals("W"))) ) {
+					String piecePosition = piece.toString().substring(0, 2);
+					for (String knightPos : knightPositions) {
+						if (piecePosition.equals(knightPos)) {
+							if (piece.pieceType == (this.white ? ReturnPiece.PieceType.BN : ReturnPiece.PieceType.WN)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+
+
+
+			return false;
 	}
+	
+	
+
+	//FUTURE MOVE CHECKER
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoard, String move) //returns true if in check after the move is done
 	{ 
-	
-		//Simulates a move?
-		//TODO: finish OnCheck
-
 		return false;
 	}
 	public boolean onCheckMate(ArrayList<ReturnPiece> currentBoard) //should be called after any piece moves
@@ -67,10 +117,25 @@ class King extends ReturnPiece
 		return false;
 	}
 
-	//TODO: move checker and castle checker and check checker 
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{	
-		return true;
+		char startFile = move.substring(0, 1).toLowerCase().charAt(0);
+        int startRank = Integer.parseInt(move.substring(1, 2));
+        char endFile = move.substring(3, 4).toLowerCase().charAt(0);
+        int endRank = Integer.parseInt(move.substring(4, 5));
+
+        int fileDiff = Math.abs(endFile - startFile);
+        int rankDiff = Math.abs(endRank - startRank);
+
+        if (fileDiff <= 1 && rankDiff <= 1) {
+
+            return true;
+        } 
+		else 
+		{
+
+            return false;
+        }
 	}
 
 }

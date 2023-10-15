@@ -932,6 +932,7 @@ public class Chess {
 								}
 								currentPlayer = chess.Chess.Player.white; //player switches
 								play.message = null;
+								System.out.println("black moves and leaves check");
 								return play; //black moves and leaves check
 							}
 						}
@@ -976,6 +977,8 @@ public class Chess {
 								}
 							}
 
+					
+					System.out.println("normal move - pawn");
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentPawn))
 						{
@@ -2175,6 +2178,7 @@ public class Chess {
 								}
 							}
 
+					
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentKnight))
 						{
@@ -2684,6 +2688,8 @@ public class Chess {
 			}//encapsulates move is valid
 		}
 				
+
+		System.out.println("Nothing changed, some if statement booted out the game state to the end.");
 		return play;
 	}
 	//end of chess.Chess.play
