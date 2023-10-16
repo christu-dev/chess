@@ -192,12 +192,14 @@ public class Capture {
         ReturnPiece removedPiece = null;
 
         //finds en passant piece
-        for (ReturnPiece piece : tempBoard){
+        for (ReturnPiece piece : tempBoard)
+        {
             if(white)
             {
             if (piece.toString().equals(""+endFile+(endRank-1)+":BP"))
                 {
                     removedPiece = piece;
+                    
                 }
             }
             else if(!white){
@@ -217,9 +219,6 @@ public class Capture {
             }
 
         }
-
-
-
 
 
         if(removedPiece != null)

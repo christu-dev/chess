@@ -984,6 +984,7 @@ public class Chess {
 					//move the piece
 					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
 					play.piecesOnBoard = tempboard; //call this right before any move is made.
+					
 
                     //en passant limiter
 								for (ReturnPiece rp : play.piecesOnBoard){
@@ -2325,9 +2326,11 @@ public class Chess {
 					//checks if moving puts own King in danger
 					if(currentPlayer == chess.Chess.Player.white)
 					{
+						
 						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
 						{
-							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+							System.out.println("found you: not check -> knight onCheck future"); 
 							return play; //Not currently check - white moves and puts own king in danger (illegal play)
 						} 
 					}

@@ -1,6 +1,20 @@
 package chess;
 import java.util.ArrayList;
 
+/*
+ * 
+ * 
+ * Overloaded method onCheck
+ * 
+ *  King.onCheck(ArrayList<ReturnPiece> currentBoard) 
+ *  		- checks if the king is vulnerable given the current state of the board.
+ *  King.onCheck(ArrayList<ReturnPiece> currentBoard, String move) 
+ * 			- checks if the king is vulnerable if the move is performed on the board.
+ *  		- It creates hypothetical future version of the board, calls King.onCheck(ArrayList<ReturnPiece> currentBoard)
+ * 			- Used as implementation for checking for illegally endangering king, and successfully leaving a check.
+ * 
+ */
+
 class King extends ReturnPiece 
 {
 	private boolean castlingDone = false; //castling CAN BE DONE ONCE
@@ -623,9 +637,76 @@ class King extends ReturnPiece
 
 
 	//FUTURE MOVE CHECKER
-	public boolean onCheck(ArrayList<ReturnPiece> currentBoard, String move) //returns true if in check after the move is done
+	public boolean onCheck(ArrayList<ReturnPiece> currentBoardMain, String move) //returns true if in check after the move is done
 	{ 
-	/* 	//this comes after move validation
+		ArrayList<ReturnPiece> currentBoard = new ArrayList<>(); //deep copy
+
+		for(ReturnPiece piece: currentBoardMain)//clone the board
+		{
+			ReturnPiece piece2 = null;
+			if(piece instanceof Bishop){
+				Bishop temp = (Bishop)piece;
+				piece2 = new Bishop(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}
+			else if(piece instanceof King){
+				King temp = (King)piece;
+				piece2 = new King(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}
+			else if(piece instanceof Pawn){
+				Pawn temp = (Pawn)piece;
+				piece2 = new Pawn(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}
+			else if(piece instanceof Knight){
+				Knight temp = (Knight)piece;
+				piece2 = new Knight(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}
+			else if(piece instanceof Queen){
+				Queen temp = (Queen)piece;
+				piece2 = new Queen(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}
+			else if(piece instanceof Rook){
+				Rook temp = (Rook)piece;
+				piece2 = new Rook(temp.white);
+				piece2.pieceRank = piece.pieceRank;
+				piece2.pieceFile = piece.pieceFile;
+				piece2.pieceType = piece.pieceType;
+				currentBoard.add(piece2);
+			}	
+		}
+		/*for(ReturnPiece piece: currentBoard)//clone the board
+		{
+			System.out.println(piece);
+		}
+		//Deep copy is working
+		*/
+
+		String startFile = move.substring(0,1);
+		int startRank = Integer.parseInt(move.substring(1,2));
+
+		String endFile = move.substring(3,4);
+		int endRank = Integer.parseInt(move.substring(4,5));
+
+	 	//this comes after move validation
 		Bishop currentBishop = null;
 		Pawn currentPawn = null;
 		King currentKing = null;
@@ -633,7 +714,9 @@ class King extends ReturnPiece
 		Knight currentKnight = null;
 		Rook currentRook = null; 
 
-		for (ReturnPiece rp: play.piecesOnBoard){
+
+		//ATTACH CURRENT PIECE TO CURRENT PIECE
+		for (ReturnPiece rp: currentBoard){
 
 			//Bishop Check-------------
 			if(move.substring(0, 2).equals(rp.toString().substring(0,2)) && rp instanceof Bishop) //find the piece and attach it to current piece
@@ -646,9 +729,9 @@ class King extends ReturnPiece
 					currentPawn = (Pawn)rp;	
 			}
 			//King check------------
-			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof King) //find the piece and attach it to current piece
+			if(rp.equals(this)) //find the piece and attach it to current piece
 			{
-					currentKing = (King)rp;
+				currentKing = (King)rp; //king moves itself
 				
 			}
 			//Queen check------------
@@ -660,6 +743,7 @@ class King extends ReturnPiece
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
 			{
 				currentKnight = (Knight)rp;
+				//System.out.println("knight attached"); works
 			}
 			//Rook check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
@@ -670,16 +754,522 @@ class King extends ReturnPiece
 		} //end iterating through pieces for Piece attachment
 		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null)
 		{
-			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			System.out.println("Error, onCheck future did not bind a piece.");
-			return play;
+			System.out.println("No legal move in onCheck future (this is not supposed to happen, it should've caught earlier)");
+			return true; //this will result in illegal move
 		}
+
+
+		//System.out.println("we got here");
+		//MOVING ALL THE HYPOTHETICAL PIECES
+		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
+		if(currentBishop != null)
+		{
+					//move the piece
+					//Capture Check
+					if(Capture.canCapture(currentBoard, move, currentBishop.white))
+					{
+						ArrayList<ReturnPiece> tempboard = Capture.takePiece(currentBoard, move);
+						currentBoard = tempboard; //call this right before any move is made
+					}
+					else
+					{
+						System.out.println("oncheck future Bishop capture fail");
+						return true; //not a check but this will return an illegal move regardless as in an early capture check
+					}
+
+					//en passant limiter
+					for (ReturnPiece rp : currentBoard)
+						{
+						if(rp.toString().contains("P")){
+								Pawn tempPawn = (Pawn)rp;
+								tempPawn.notFirstMoved();
+								rp = tempPawn;
+							}
+						}
+
+					//piece is updated
+					King currKing = null;		
+					for (ReturnPiece rp: currentBoard){
+						if(rp.equals(currentBishop))
+						{
+							
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+						if(rp.equals(this)) //attaching self-reference king to current king in question
+						{
+							currKing = (King)rp;
+
+						}
+					}
+
+					//CHECKING KING ON CHECK IN FUTURE
+					if(currKing.onCheck(currentBoard))
+					{
+						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						return true;
+					}
+					//if the move doesn't return true; valid move for bishop
+					return false;					
+		}
+		//TODO if piece found was a Pawn:----------------------------------------------------------------------------------------------------------------
+		if(currentPawn != null)
+		{
+					//move the piece
+					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(currentBoard, move, currentPawn.white);
+					currentBoard = tempboard; //call this right before any move is made.
+
+                    //en passant limiter
+					for (ReturnPiece rp : currentBoard)
+						{
+						if(rp == currentPawn)
+						{
+							continue;
+						}
+						if(rp.toString().contains("P")){
+							Pawn tempPawn = (Pawn)rp;
+							tempPawn.notFirstMoved();
+							rp = tempPawn;
+						}
+					}
+
+					King currKing = null;
+					ReturnPiece PromotionPiece = null;
+					for (ReturnPiece rp: currentBoard){
+						if(rp.equals(currentPawn))
+						{
+							
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;	
+
+							Pawn promoteChecker = (Pawn)rp; //make a pawn object set to rp after it has moved
+							PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
+						}
+						if(rp.equals(this)) //attaching self-reference king to current king in question
+						{
+							currKing = (King)rp;
+
+						}
+					}
+
+					//promotion if eligible
+					if(PromotionPiece != null){
+						currentBoard.remove(currentPawn);
+						currentBoard.add(PromotionPiece);
+					}
+
+					//CHECKING KING ON CHECK IN FUTURE
+					if(currKing.onCheck(currentBoard))
+					{
+						System.out.println("pawn in oncheck future can't be moved: king is still in check or you're putting king into check this way.");
+						return true;
+					}
+					//if the move doesn't return true; valid move for pawn
+					return false;			
+		}
+		//TODO if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
+		if(currentQueen != null)
+		{			//move the piece
+					//Capture Check
+					if(Capture.canCapture(currentBoard, move, currentQueen.white))
+					{
+						ArrayList<ReturnPiece> tempboard = Capture.takePiece(currentBoard, move);
+						currentBoard = tempboard; //call this right before any move is made
+					}
+					else
+					{
+						System.out.println("oncheck future queen can capture failed");
+						return true; //not a check but this will return an illegal move regardless as in an early capture check
+					}
+
+					//en passant limiter
+					for (ReturnPiece rp : currentBoard)
+						{
+						if(rp.toString().contains("P")){
+								Pawn tempPawn = (Pawn)rp;
+								tempPawn.notFirstMoved();
+								rp = tempPawn;
+							}
+						}
+
+					//piece is updated
+					King currKing = null;		
+					for (ReturnPiece rp: currentBoard){
+						if(rp.equals(currentQueen))
+						{
+							
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+						if(rp.equals(this)) //attaching self-reference king to current king in question
+						{
+							currKing = (King)rp;
+
+						}
+					}
+
+					
+
+					//CHECKING KING ON CHECK IN FUTURE
+					if(currKing.onCheck(currentBoard))
+					{
+						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						return true;
+					}
+					//if the move doesn't return true; valid move for bishop
+					return false;
+		}
+		//TODO if piece found was a Knight----------------------------------------------------------------------------------
+		if(currentKnight != null)
+		{
+		//move the piece
+		
+				//Capture Check
+				if(Capture.canCapture(currentBoard, move, currentKnight.white))
+				{
+					
+					ArrayList<ReturnPiece> tempboard = Capture.takePiece(currentBoard, move);
+					currentBoard = tempboard; //call this right before any move is made
+				}
+				else
+				{
+					System.out.println("oncheck future knight can capture fail");
+					return true; //not a check but this will return an illegal move regardless as in an early capture check
+				}
+
+				
+				//en passant limiter
+				for (ReturnPiece rp : currentBoard)
+					{
+					if(rp.toString().contains("P")){
+							Pawn tempPawn = (Pawn)rp;
+							tempPawn.notFirstMoved();
+							rp = tempPawn;
+						}
+					}
+
+				//piece is updated
+				King currKing = null;		
+				for (ReturnPiece rp: currentBoard){
+					if(rp.equals(currentKnight))
+					{
+						
+						if(endFile.equals("a"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.a;
+						}
+						if(endFile.equals("b"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b;
+						}
+						if(endFile.equals("c"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c;
+						}
+						if(endFile.equals("d"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d;
+						}
+						if(endFile.equals("e"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.e;
+						}
+						if(endFile.equals("f"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f;
+						}
+						if(endFile.equals("g"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g;
+						}
+						if(endFile.equals("h"))
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.h;
+						}
+
+						rp.pieceRank = endRank;						
+					}
+					if(rp.equals(this)) //attaching self-reference king to current king in question
+					{
+						currKing = (King)rp;
+
+					}
+				}
+
+				//CHECKING KING ON CHECK IN FUTURE
+				if(currKing.onCheck(currentBoard))
+				{
+					System.out.println("knight in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+					return true;
+				}
+				//if the move doesn't return true; valid move for bishop
+
+			return false;
+		}
+		//TODO if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
+		if(currentRook != null)
+		{
+			//move the piece
+					//Capture Check
+					if(Capture.canCapture(currentBoard, move, currentRook.white))
+					{
+						ArrayList<ReturnPiece> tempboard = Capture.takePiece(currentBoard, move);
+						currentBoard = tempboard; //call this right before any move is made
+					}
+					else
+					{
+						System.out.println("oncheck Rook oncheck cancapture fail");
+						return true; //not a check but this will return an illegal move regardless as in an early capture check
+					}
+
+					//en passant limiter
+					for (ReturnPiece rp : currentBoard)
+						{
+						if(rp.toString().contains("P")){
+								Pawn tempPawn = (Pawn)rp;
+								tempPawn.notFirstMoved();
+								rp = tempPawn;
+							}
+						}
+
+					//piece is updated
+					King currKing = null;		
+					for (ReturnPiece rp: currentBoard){
+						if(rp.equals(currentRook))
+						{
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;						
+						}
+						if(rp.equals(this)) //attaching self-reference king to current king in question
+						{
+							currKing = (King)rp;
+
+						}
+					}
+
+					//CHECKING KING ON CHECK IN FUTURE
+					if(currKing.onCheck(currentBoard))
+					{
+						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						return true;
+					}
+					//if the move doesn't return true; valid move for bishop
+					return false;
 		
 
 
-			*/
+		}
+		//TODO if piece found was a King:----------------------------------------------------------------------------------------------------------------
+		if(currentKing != null)
+		{
+				char startFile2 = move.substring(0, 1).toLowerCase().charAt(0);
+        		int startRank2 = Integer.parseInt(move.substring(1, 2));
+        		char endFile2 = move.substring(3, 4).toLowerCase().charAt(0);
+        		int endRank2 = Integer.parseInt(move.substring(4, 5));
 
-		return false; 
+        		int fileDiff = Math.abs(endFile2 - startFile2);
+        		int rankDiff = Math.abs(endRank2 - startRank2);
+
+				if (fileDiff > 1 || rankDiff > 1){
+					System.out.println("ooncheck future King rank diff failed");
+					return true; //cannot castle to escape a check, returns false, which prints illegal move
+				}
+
+				//Capture Check
+				if(Capture.canCapture(currentBoard, move, currentKing.white))
+				{
+					ArrayList<ReturnPiece> tempboard = Capture.takePiece(currentBoard, move);
+					currentBoard = tempboard; //call this right before any move is made
+				}
+				else
+				{
+					System.out.println("oncheck King can capture failed");
+					return true; //not a check but this will return an illegal move regardless as in an early capture check
+				}
+
+				for (ReturnPiece rp: currentBoard){
+						if(rp.equals(currentKing))
+						{
+							
+							if(endFile.equals("a"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.a;
+							}
+							if(endFile.equals("b"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.b;
+							}
+							if(endFile.equals("c"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.c;
+							}
+							if(endFile.equals("d"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.d;
+							}
+							if(endFile.equals("e"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.e;
+							}
+							if(endFile.equals("f"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.f;
+							}
+							if(endFile.equals("g"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.g;
+							}
+							if(endFile.equals("h"))
+							{
+								rp.pieceFile = ReturnPiece.PieceFile.h;
+							}
+
+							rp.pieceRank = endRank;
+							
+						}
+					}
+					
+					if(currentKing.onCheck(currentBoard))
+					{
+						System.out.println("King in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						return true;
+					}
+					//if the move doesn't return true; valid move for king
+					return false;
+		} //ends all pieces moving.
+
+		
+			System.out.println("Somehow there was not a piece sent to onCheck future, pskipped simulated move, this shouldn't happen");
+			return true; //will get illegal move
+		
 	}
 	public boolean onCheckMate(ArrayList<ReturnPiece> currentBoard) //should be called after any piece moves
 	{
