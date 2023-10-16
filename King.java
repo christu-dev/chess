@@ -1,6 +1,8 @@
 package chess;
 import java.util.ArrayList;
 
+import javax.management.monitor.StringMonitorMBean;
+
 /*
  * 
  * 
@@ -1273,10 +1275,191 @@ class King extends ReturnPiece
 	}
 	public boolean onCheckMate(ArrayList<ReturnPiece> currentBoard) //should be called after any piece moves
 	{
+		
 
-		//TODO:finish onCheckMate
-		return false;
-	}
+		if (!onCheck(currentBoard)) { //if not in check, returns false, because it can't be in checkmate
+			return false; 
+		}
+	
+		char kingFile = this.toString().charAt(0);
+		int kingRank = Character.getNumericValue(this.toString().charAt(1));
 	
 
+		ArrayList<String> escapeOptions = new ArrayList<String>();
+
+
+		//checkmate logic
+		//what we need to do: check every single possible move for every piece
+		//for every piece, check valid move for every position
+		//then check capture valid for every position
+		//use the found valid move to form a move
+		//use onCheck future on the board and the move
+		//if true, then the move is added to arraylist String
+		//if String isempty, return true. the king can't do anything to leave check.
+		//therefore, checkmate
+
+
+		//All possible Rook Directions - minus castling
+
+
+		if(this.white) //check all options for all white pieces
+		{
+			for(ReturnPiece rp : currentBoard)
+			{
+				if(rp.toString().substring(3,4).charAt(0) == 'W')
+				{
+					
+					String startPos = rp.toString().substring(0,2);
+					
+					for(int i = 0; i < 8; i++)
+					{
+						for(int j = 1; j < 9; j++)
+						{
+							char endFile = (char)('a'+1);
+							int endRank = j;
+							String move = startPos + " " + endFile +""+ endRank;
+							if(rp instanceof Rook){
+								Rook temp = (Rook)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Bishop){
+
+								Bishop temp = (Bishop)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+							}
+							if(rp instanceof Knight){
+								Knight temp = (Knight)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Queen){
+								Queen temp = (Queen)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Pawn){
+								Pawn temp = (Pawn)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canPawnCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof King){
+								King temp = (King)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+						}//end rank iterator
+					}//end file iterator
+
+					
+				}//if piece is "W" matches the king in question
+			}//if current king is white
+		}
+		else if(!this.white) //check all options for all black pieces
+		{
+			for(ReturnPiece rp : currentBoard)
+			{
+				if(rp.toString().substring(3,4).charAt(0) == 'B')
+				{
+					
+					String startPos = rp.toString().substring(0,2);
+					
+					for(int i = 0; i < 8; i++)
+					{
+						for(int j = 1; j < 9; j++)
+						{
+							char endFile = (char)('a'+1);
+							int endRank = j;
+							String move = startPos + " " + endFile +""+ endRank;
+							if(rp instanceof Rook){
+								Rook temp = (Rook)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Bishop){
+
+								Bishop temp = (Bishop)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+							}
+							if(rp instanceof Knight){
+								Knight temp = (Knight)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Queen){
+								Queen temp = (Queen)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof Pawn){
+								Pawn temp = (Pawn)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canPawnCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+							if(rp instanceof King){
+								King temp = (King)rp;
+								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+								{
+									escapeOptions.add(move);
+								}
+
+							}
+						}//end rank iterator
+					}//end file iterator
+
+					
+				}//if piece is "W" matches the king in question
+			}//if current king is white
+
+		}
+
+		if(escapeOptions.isEmpty())
+		{
+			return true; //true checkmate, no escape options
+		}
+		else
+		{
+			return false; //escape options don't exist
+		}
+
+	}
+
+	private boolean isValidSquare(char file, int rank) 
+	{
+		return file >= 'a' && file <= 'h' && rank >= 1 && rank <= 8;
+	}
 }
+
