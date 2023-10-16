@@ -330,22 +330,68 @@ class King extends ReturnPiece
 				} 
 			}
 
-
-
-
-
-
-
 		return false; 
 	}
 
-	
-	
 
 	//FUTURE MOVE CHECKER
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoard, String move) //returns true if in check after the move is done
 	{ 
-		return false;
+	/* 	//this comes after move validation
+		Bishop currentBishop = null;
+		Pawn currentPawn = null;
+		King currentKing = null;
+		Queen currentQueen = null;
+		Knight currentKnight = null;
+		Rook currentRook = null; 
+
+		for (ReturnPiece rp: play.piecesOnBoard){
+
+			//Bishop Check-------------
+			if(move.substring(0, 2).equals(rp.toString().substring(0,2)) && rp instanceof Bishop) //find the piece and attach it to current piece
+			{
+					currentBishop = (Bishop)rp;	
+			}
+			//Pawn check------------
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Pawn) //find the piece and attach it to current piece
+			{
+					currentPawn = (Pawn)rp;	
+			}
+			//King check------------
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof King) //find the piece and attach it to current piece
+			{
+					currentKing = (King)rp;
+				
+			}
+			//Queen check------------
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Queen) //find the piece and attach it to current piece
+			{
+					currentQueen = (Queen)rp;	
+			}
+			//Knight check------------
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
+			{
+				currentKnight = (Knight)rp;
+			}
+			//Rook check------------
+			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
+			{	
+				currentRook = (Rook)rp;
+			}
+				
+		} //end iterating through pieces for Piece attachment
+		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null)
+		{
+			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			System.out.println("Error, onCheck future did not bind a piece.");
+			return play;
+		}
+		
+
+
+			*/
+
+		return false; 
 	}
 	public boolean onCheckMate(ArrayList<ReturnPiece> currentBoard) //should be called after any piece moves
 	{

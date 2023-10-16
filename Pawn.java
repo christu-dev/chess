@@ -110,6 +110,71 @@ class Pawn extends ReturnPiece {
         }
         System.out.println("Regular move validate failed. canPawnCapture failed.");
         return false; //all other moves are wrong
+    }// end of checkValidMove
+
+
+    ReturnPiece pawnPromotion(String move) 
+    {
+        char startFile = move.charAt(0);
+        int startRank = Integer.parseInt(String.valueOf(move.charAt(1)));
+        char endFile = move.charAt(3);
+        int endRank = Integer.parseInt(String.valueOf(move.charAt(4)));
+    
+    
+        char promotionPiece;
+        if ((this.white && endRank == 8) || (!this.white && endRank == 1)) 
+        {
+            if(move.length() >5)
+            {
+                promotionPiece = move.charAt(6);
+                // If a promotion piece is specified, extract it from the move
+            }
+            else
+            {
+                promotionPiece = 'Q'; // Default to promoting to a queen if not specified
+            }
+            
+
+            if (promotionPiece == 'Q' || promotionPiece == 'N' || promotionPiece == 'R' ||  promotionPiece == 'B') //queen, knight, rook, bishop
+            {
+                ReturnPiece newPiece = null;
+
+                if (promotionPiece == 'Q') 
+                {
+
+                    newPiece = new Queen(this.white); //sets the piecetype
+                    newPiece.pieceFile = this.pieceFile;
+                    newPiece.pieceRank = this.pieceRank;
+
+                } 
+                else if (promotionPiece == 'R') 
+                {
+
+                    newPiece = new Rook(this.white); //sets the piecetype
+                    newPiece.pieceFile = this.pieceFile;
+                    newPiece.pieceRank = this.pieceRank;
+
+                } 
+                else if (promotionPiece == 'N') 
+                {
+
+                    newPiece = new Knight(this.white); //sets the piecetype;
+                    newPiece.pieceFile = this.pieceFile;
+                    newPiece.pieceRank = this.pieceRank;
+
+                }
+                else if(promotionPiece == 'B')
+                {
+                    newPiece = new Bishop(this.white); //sets the piecetype;
+                    newPiece.pieceFile = this.pieceFile;
+                    newPiece.pieceRank = this.pieceRank;
+                }
+    
+                return newPiece;
+            }
+        }
+        //if promotion is illegal, then just return null
+        return null; //in chess.java have a statement checking if PawnPromotion is null.
     }
 }
 

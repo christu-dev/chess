@@ -761,46 +761,57 @@ public class Chess {
 									rp = tempPawn;
 								}
 							}
-								
-								for (ReturnPiece rp: play.piecesOnBoard){
-									if(rp.equals(currentPawn))
+							
+							ReturnPiece PromotionPiece = null;
+							for (ReturnPiece rp: play.piecesOnBoard){
+								if(rp.equals(currentPawn))
+								{
+									//update the respectiev piece in play.piecesOnBoard
+									if(endFile.equals("a"))
 									{
-										//update the respectiev piece in play.piecesOnBoard
-										if(endFile.equals("a"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.a;
-										}
-										if(endFile.equals("b"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.b;
-										}
-										if(endFile.equals("c"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.c;
-										}
-										if(endFile.equals("d"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.d;
-										}
-										if(endFile.equals("e"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.e;
-										}
-										if(endFile.equals("f"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.f;
-										}
-										if(endFile.equals("g"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.g;
-										}
-										if(endFile.equals("h"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.h;
-										}
-										rp.pieceRank = endRank;						
+										rp.pieceFile = ReturnPiece.PieceFile.a;
 									}
+									if(endFile.equals("b"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.b;
+									}
+									if(endFile.equals("c"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.c;
+									}
+									if(endFile.equals("d"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.d;
+									}
+									if(endFile.equals("e"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.e;
+									}
+									if(endFile.equals("f"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.f;
+									}
+									if(endFile.equals("g"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.g;
+									}
+									if(endFile.equals("h"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.h;
+									}
+
+									rp.pieceRank = endRank;	
+
+									Pawn promoteChecker = (Pawn)rp; //make a pawn object set to rp after it has moved
+									PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 								}
+							}
+							//promotion if eligible
+							if(PromotionPiece != null){
+								play.piecesOnBoard.remove(currentPawn);
+								play.piecesOnBoard.add(PromotionPiece);
+							}
+
 							if(currBK.onCheckMate(play.piecesOnBoard)){
 								if(move.contains("draw?")) //draw overlaps everything
 								{
@@ -862,47 +873,57 @@ public class Chess {
 									rp = tempPawn;
 								}
 							}
-
-								for (ReturnPiece rp: play.piecesOnBoard){
-									if(rp.equals(currentPawn))
+							
+							ReturnPiece PromotionPiece = null;
+							for (ReturnPiece rp: play.piecesOnBoard){
+								if(rp.equals(currentPawn))
+								{
+									//update the respectiev piece in play.piecesOnBoard
+									if(endFile.equals("a"))
 									{
-										//update the respectiev piece in play.piecesOnBoard
-										if(endFile.equals("a"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.a;
-										}
-										if(endFile.equals("b"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.b;
-										}
-										if(endFile.equals("c"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.c;
-										}
-										if(endFile.equals("d"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.d;
-										}
-										if(endFile.equals("e"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.e;
-										}
-										if(endFile.equals("f"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.f;
-										}
-										if(endFile.equals("g"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.g;
-										}
-										if(endFile.equals("h"))
-										{
-											rp.pieceFile = ReturnPiece.PieceFile.h;
-										}
-
-										rp.pieceRank = endRank;						
+										rp.pieceFile = ReturnPiece.PieceFile.a;
 									}
+									if(endFile.equals("b"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.b;
+									}
+									if(endFile.equals("c"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.c;
+									}
+									if(endFile.equals("d"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.d;
+									}
+									if(endFile.equals("e"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.e;
+									}
+									if(endFile.equals("f"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.f;
+									}
+									if(endFile.equals("g"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.g;
+									}
+									if(endFile.equals("h"))
+									{
+										rp.pieceFile = ReturnPiece.PieceFile.h;
+									}
+
+									rp.pieceRank = endRank;	
+
+									Pawn promoteChecker = (Pawn)rp; //make a pawn object set to rp after it has moved
+									PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 								}
+							}
+							//promotion if eligible
+							if(PromotionPiece != null){
+								play.piecesOnBoard.remove(currentPawn);
+								play.piecesOnBoard.add(PromotionPiece);
+							}
+
 							if(currWK.onCheckMate(play.piecesOnBoard)){
 								if(move.contains("draw?")) //draw overlaps everything
 								{
@@ -979,6 +1000,8 @@ public class Chess {
 
 					
 					System.out.println("normal move - pawn");
+
+					ReturnPiece PromotionPiece = null;
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentPawn))
 						{
@@ -1016,9 +1039,19 @@ public class Chess {
 								rp.pieceFile = ReturnPiece.PieceFile.h;
 							}
 
-							rp.pieceRank = endRank;						
+							rp.pieceRank = endRank;	
+
+							Pawn promoteChecker = (Pawn)rp; //make a pawn object set to rp after it has moved
+							PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 						}
 					}
+					//promotion if eligible
+					if(PromotionPiece != null){
+						play.piecesOnBoard.remove(currentPawn);
+						play.piecesOnBoard.add(PromotionPiece);
+					}
+
+					
 					//checks checkmate after piece is moved
 					if(currBK.onCheckMate(play.piecesOnBoard))
 					{
