@@ -27,6 +27,55 @@ class Pawn extends ReturnPiece {
     void notFirstMoved(){
         this.firstMoved = false;
     }
+    void possibleMoves()
+    {
+        //ArrayList<String> possibleMoves = new ArrayList<>();
+
+       /*  //forward move
+        String move1 = this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank + 1);
+        String move2 = this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank + 2);
+        String move3 = this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank - 1);
+        String move4 = this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank - 2);
+
+        //captures
+        String move5 = this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)+1)+""+(this.pieceRank +1);
+        String move6 = this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)-1)+""+(this.pieceRank +1);
+        String move7 = this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)+1)+""+(this.pieceRank -1);
+        String move8 = this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)-1)+""+(this.pieceRank -1);*/
+
+        if(this.white)
+        {
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank + 1));
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank + 2));
+        }
+
+        if(!this.white){
+            if(!(this.pieceRank - 1 < 1))
+            Chess.possibleMoves.add(this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank - 1));
+
+            if(!(this.pieceRank - 2 < 1))
+            Chess.possibleMoves.add(this.toString().substring(0,2) + " " +this.toString().charAt(0)+""+(this.pieceRank - 2));
+        }
+
+        if(this.white)
+        {
+            Chess.possibleMoves.add(this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)+1)+""+(this.pieceRank +1));
+            Chess.possibleMoves.add(this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)-1)+""+(this.pieceRank +1));
+        }
+        
+
+        if(!this.white)
+        {
+            if(!(this.pieceRank - 1 < 1))
+        {
+           Chess.possibleMoves.add(this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)+1)+""+(this.pieceRank -1));
+           Chess.possibleMoves.add(this.toString().substring(0,2) + " " +(char)(this.toString().charAt(0)-1)+""+(this.pieceRank -1));
+        }
+
+        }
+        
+        //return possibleMoves;
+    }
 		
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{	
@@ -35,6 +84,15 @@ class Pawn extends ReturnPiece {
 
 		char endFile = move.substring(3,4).toLowerCase().charAt(0);
 		int endRank = Integer.parseInt(move.substring(4,5));
+
+        if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
+		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
 
 
         int rankDiff = endRank - startRank;

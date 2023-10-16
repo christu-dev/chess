@@ -15,6 +15,15 @@ import javax.management.monitor.StringMonitorMBean;
  *  		- It creates hypothetical future version of the board, calls King.onCheck(ArrayList<ReturnPiece> currentBoard)
  * 			- Used as implementation for checking for illegally endangering king, and successfully leaving a check.
  * 
+ * 
+ * The bounds checking in any given piece's possibleMove() method is to prevent Parsing a negative sign when passing char
+ * onCheck has out of bounds checking for everything - it returns true if there are out of bounds moev - this works as expected anyways because it will print illegal move
+ * this way, only valid moves are added in considered options for escape routes
+ * 
+ * 
+ * onCheckmate is an algorithm that uses a static arraylist of Strings in Chess, adds and evaluates moves, then adds moves to a local method arraylist if it will get the King in question out of check
+ * if the local arraylist (the escape options) is empty, that is checkmate.
+ * 
  */
 
 class King extends ReturnPiece 
@@ -54,13 +63,54 @@ class King extends ReturnPiece
 	{
 		this.castlingDone = true;
 	}
+	void possibleMoves()
+    {
+        //ArrayList<String> possibleMoves = new ArrayList<>();
+		//String temp;
+
+        //temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1);
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1));
+        //temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 0);
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 0));
+        
+        
+        //temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 0);
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 0));
+        //temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1);
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1));
+        //temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 0) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1 );
+        Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 0) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) + 1 ));
+
+
+		if(!(((int)(Integer.parseInt(this.toString().substring(1,2)))- 1)<1))
+		{
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1));
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 0) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + 0) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1));
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - 1) + "" +(int)(Integer.parseInt(this.toString().substring(1,2)) - 1));
+		}
+
+        //return possibleMoves();
+    }
 
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{	
+		
 		char startFile = move.substring(0, 1).toLowerCase().charAt(0);
         int startRank = Integer.parseInt(move.substring(1, 2));
         char endFile = move.substring(3, 4).toLowerCase().charAt(0);
         int endRank = Integer.parseInt(move.substring(4, 5));
+
+		if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
+		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
 
         int fileDiff = Math.abs(endFile - startFile);
         int rankDiff = Math.abs(endRank - startRank);
@@ -95,7 +145,7 @@ class King extends ReturnPiece
         char startFile = move.substring(0, 1).toLowerCase().charAt(0);
         int startRank = Integer.parseInt(move.substring(1, 2));
         char endFile = move.substring(3, 4).toLowerCase().charAt(0);
-        int endRank = Integer.parseInt(move.substring(4, 5));
+        int endRank = Integer.parseInt(move.substring(4,5));
 
         int fileDiff = Math.abs(endFile - startFile);
         int rankDiff = Math.abs(endRank - startRank);
@@ -641,6 +691,10 @@ class King extends ReturnPiece
 	//FUTURE MOVE CHECKER
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoardMain, String move) //returns true if in check after the move is done
 	{ 
+		
+
+		
+
 		ArrayList<ReturnPiece> currentBoard = new ArrayList<>(); //deep copy
 
 		for(ReturnPiece piece: currentBoardMain)//clone the board
@@ -707,6 +761,15 @@ class King extends ReturnPiece
 
 		String endFile = move.substring(3,4);
 		int endRank = Integer.parseInt(move.substring(4,5));
+
+		if(startFile.charAt(0) < 'a' || startFile.charAt(0) > 'h' || startRank < 1 || startRank > 8){
+			//System.out.println("out of bounds");
+			return true; //for checkmate check purposes avoiding stack overflow
+		}
+		if(endFile.charAt(0) < 'a' || endFile.charAt(0) > 'h' || endRank < 1 || endRank > 8){
+			//System.out.println("out of bounds");
+			return true; //for checkmate check purposes avoiding stack overflow
+		}
 
 	 	//this comes after move validation
 		Bishop currentBishop = null;
@@ -850,6 +913,13 @@ class King extends ReturnPiece
 		if(currentPawn != null)
 		{
 					//move the piece
+
+					//to prevent pawn from taking own king - other pieces have capture check.
+					if(!(currentPawn.checkValidMove(currentBoard, move))) //if pawn move is not valid
+					{
+						return true;
+					}
+
 					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(currentBoard, move, currentPawn.white);
 					currentBoard = tempboard; //call this right before any move is made.
 
@@ -925,6 +995,7 @@ class King extends ReturnPiece
 					}
 
 					//CHECKING KING ON CHECK IN FUTURE
+					//System.out.println("made it here");
 					if(currKing.onCheck(currentBoard))
 					{
 						System.out.println("pawn in oncheck future can't be moved: king is still in check or you're putting king into check this way.");
@@ -1200,7 +1271,7 @@ class King extends ReturnPiece
         		int fileDiff = Math.abs(endFile2 - startFile2);
         		int rankDiff = Math.abs(endRank2 - startRank2);
 
-				if (fileDiff > 1 || rankDiff > 1){
+				if (this.onCheck(currentBoard) && fileDiff > 1 || rankDiff > 1){
 					System.out.println("ooncheck future King rank diff failed");
 					return true; //cannot castle to escape a check, returns false, which prints illegal move
 				}
@@ -1280,11 +1351,6 @@ class King extends ReturnPiece
 		if (!onCheck(currentBoard)) { //if not in check, returns false, because it can't be in checkmate
 			return false; 
 		}
-	
-		char kingFile = this.toString().charAt(0);
-		int kingRank = Character.getNumericValue(this.toString().charAt(1));
-	
-
 		ArrayList<String> escapeOptions = new ArrayList<String>();
 
 
@@ -1298,80 +1364,124 @@ class King extends ReturnPiece
 		//if String isempty, return true. the king can't do anything to leave check.
 		//therefore, checkmate
 
-
-		//All possible Rook Directions - minus castling
-
-
 		if(this.white) //check all options for all white pieces
 		{
 			for(ReturnPiece rp : currentBoard)
 			{
-				if(rp.toString().substring(3,4).charAt(0) == 'W')
+				if(rp.toString().substring(3,4).charAt(0) == 'W') //white king, white pieces
 				{
-					
-					String startPos = rp.toString().substring(0,2);
-					
-					for(int i = 0; i < 8; i++)
+					if(rp instanceof Rook)
 					{
-						for(int j = 1; j < 9; j++)
+						Rook temp = (Rook)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
+							}
+							Chess.possibleMoves.clear();
+
+					}
+					else if(rp instanceof Bishop)
+					{
+
+						Bishop temp = (Bishop)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
+							}
+							Chess.possibleMoves.clear();
+					}
+					else if(rp instanceof Knight)
+					{
+						Knight temp = (Knight)rp;
+						//ArrayList<String> moves = 
+						temp.possibleMoves();
+
+						for(String move: Chess.possibleMoves)
 						{
-							char endFile = (char)('a'+1);
-							int endRank = j;
-							String move = startPos + " " + endFile +""+ endRank;
-							if(rp instanceof Rook){
-								Rook temp = (Rook)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+							//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+							//{
+								
+								if(!this.onCheck(currentBoard,move))
 								{
 									escapeOptions.add(move);
 								}
 
-							}
-							if(rp instanceof Bishop){
+								
 
-								Bishop temp = (Bishop)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
-							}
-							if(rp instanceof Knight){
-								Knight temp = (Knight)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							//}	
+						}
+						Chess.possibleMoves.clear();
 
-							}
-							if(rp instanceof Queen){
-								Queen temp = (Queen)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+					}
+					else if(rp instanceof Queen){
+						Queen temp = (Queen)rp;
+						temp.possibleMoves();
 
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-							if(rp instanceof Pawn){
-								Pawn temp = (Pawn)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canPawnCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							Chess.possibleMoves.clear();
 
+					}
+					else if(rp instanceof Pawn){
+						Pawn temp = (Pawn)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-							if(rp instanceof King){
-								King temp = (King)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							Chess.possibleMoves.clear();
+					}
+					else if(rp instanceof King){
+						King temp = (King)rp;
+						temp.possibleMoves();
 
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-						}//end rank iterator
-					}//end file iterator
+							Chess.possibleMoves.clear();
 
-					
-				}//if piece is "W" matches the king in question
-			}//if current king is white
+					}
+
+				}//if piece is "W" matches the white king in question
+			}//piece in board iteration
 		}
 		else if(!this.white) //check all options for all black pieces
 		{
@@ -1380,86 +1490,135 @@ class King extends ReturnPiece
 				if(rp.toString().substring(3,4).charAt(0) == 'B')
 				{
 					
-					String startPos = rp.toString().substring(0,2);
-					
-					for(int i = 0; i < 8; i++)
+					if(rp instanceof Rook)
 					{
-						for(int j = 1; j < 9; j++)
+						Rook temp = (Rook)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
+							}
+							Chess.possibleMoves.clear();
+
+					}
+					else if(rp instanceof Bishop)
+					{
+
+						Bishop temp = (Bishop)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
+							}
+							Chess.possibleMoves.clear();
+					}
+					else if(rp instanceof Knight)
+					{
+						Knight temp = (Knight)rp;
+						//ArrayList<String> moves = 
+						temp.possibleMoves();
+
+						for(String move: Chess.possibleMoves)
 						{
-							char endFile = (char)('a'+1);
-							int endRank = j;
-							String move = startPos + " " + endFile +""+ endRank;
-							if(rp instanceof Rook){
-								Rook temp = (Rook)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
+							//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+							//{
+								
+								if(!this.onCheck(currentBoard,move))
 								{
 									escapeOptions.add(move);
 								}
 
-							}
-							if(rp instanceof Bishop){
+								
 
-								Bishop temp = (Bishop)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
-							}
-							if(rp instanceof Knight){
-								Knight temp = (Knight)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							//}	
+						}
+						Chess.possibleMoves.clear();
 
-							}
-							if(rp instanceof Queen){
-								Queen temp = (Queen)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+					}
+					else if(rp instanceof Queen){
+						Queen temp = (Queen)rp;
+						temp.possibleMoves();
 
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-							if(rp instanceof Pawn){
-								Pawn temp = (Pawn)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canPawnCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							Chess.possibleMoves.clear();
 
+					}
+					else if(rp instanceof Pawn){
+						Pawn temp = (Pawn)rp;
+						temp.possibleMoves();
+
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-							if(rp instanceof King){
-								King temp = (King)rp;
-								if(temp.checkValidMove(currentBoard, move) && Capture.canCapture(currentBoard, move, this.white) && !(this.onCheck(currentBoard,move))) //found a valid movement, valid capture, and this is no longer on check after
-								{
-									escapeOptions.add(move);
-								}
+							Chess.possibleMoves.clear();
+					}
+					else if(rp instanceof King){
+						King temp = (King)rp;
+						temp.possibleMoves();
 
+							for(String move: Chess.possibleMoves)
+							{
+								//if(temp.checkValidMove(currentBoard, move)) //found a valid movement, valid capture, and this is no longer on check after
+								//{		
+									if(!this.onCheck(currentBoard,move))
+									{
+										escapeOptions.add(move);
+									}	
+								//}	
 							}
-						}//end rank iterator
-					}//end file iterator
+							Chess.possibleMoves.clear();
 
+					}
 					
-				}//if piece is "W" matches the king in question
-			}//if current king is white
-
+				}//if piece is "B" matches the black king in question
+			}//piece in board iteration
 		}
+		//finish checking for escape options.
 
+		//finish escape Option algorithm
 		if(escapeOptions.isEmpty())
 		{
 			return true; //true checkmate, no escape options
 		}
 		else
 		{
+			for(String s : escapeOptions){
+				System.out.println(s);
+			}
 			return false; //escape options don't exist
 		}
 
-	}
 
-	private boolean isValidSquare(char file, int rank) 
-	{
-		return file >= 'a' && file <= 'h' && rank >= 1 && rank <= 8;
 	}
 }
 

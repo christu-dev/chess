@@ -43,6 +43,7 @@ class ReturnPlay {
 
 public class Chess {
 	static ReturnPlay play; //ReturnPlay object holds ArrayList<ReturnPiece> piecesOnBoard
+	public static ArrayList<String> possibleMoves = new ArrayList<String>(); //used for checkmate
 	
 
 	static boolean white_currently_checked;

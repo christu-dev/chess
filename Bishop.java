@@ -16,6 +16,30 @@ class Bishop extends ReturnPiece {
 		}
 		
 	}
+	void possibleMoves()
+    {
+        //ArrayList<String> possibleMoves = new ArrayList<>();
+		//String temp;
+        for(int i = 1; i < 8; i++)
+		{
+			
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))+i);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))+i));
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))+i);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))+i));
+
+			if(((int)(Integer.parseInt(this.toString().substring(1,2)))-i)<1)
+				continue;
+
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))-i);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) + i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))-i));
+			//temp = this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))-i);
+			Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0) - i) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))-i));
+		}
+
+        //return possibleMoves;
+    }
+
 	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
 	{
 		//move is of form RankFile RankFile
@@ -26,6 +50,15 @@ class Bishop extends ReturnPiece {
 
 		char endFile = move.substring(3,4).toLowerCase().charAt(0);
 		int endRank = Integer.parseInt(move.substring(4,5));
+
+		if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
+		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
+			//System.out.println("out of bounds");
+			return false;
+		}
 
 		/* works: currentBoard param is passing from piecesOnBoard of ReturnPlay play
 		System.out.println(startFile);
