@@ -829,6 +829,10 @@ class King extends ReturnPiece
 		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
 		if(currentBishop != null)
 		{
+					if(!(currentBishop.checkValidMove(currentBoard, move))) //if move is not valid
+					{
+						return true; //not a true check but returns illegal move as expected
+					}
 					//move the piece
 					//Capture Check
 					if(Capture.canCapture(currentBoard, move, currentBishop.white))
@@ -1006,7 +1010,13 @@ class King extends ReturnPiece
 		}
 		//TODO if piece found was a Queen:----------------------------------------------------------------------------------------------------------------
 		if(currentQueen != null)
-		{			//move the piece
+		{		
+				if(!(currentQueen.checkValidMove(currentBoard, move))) //if move is not valid
+					{
+						return true; //not a true check but returns illegal move as expected
+					}	
+			
+					//move the piece
 					//Capture Check
 					if(Capture.canCapture(currentBoard, move, currentQueen.white))
 					{
@@ -1091,6 +1101,10 @@ class King extends ReturnPiece
 		//TODO if piece found was a Knight----------------------------------------------------------------------------------
 		if(currentKnight != null)
 		{
+			if(!(currentKnight.checkValidMove(currentBoard, move))) //if move is not valid
+					{
+						return true; //not a true check but returns illegal move as expected
+					}
 		//move the piece
 		
 				//Capture Check
@@ -1178,6 +1192,10 @@ class King extends ReturnPiece
 		//TODO if piece found was a Rook:----------------------------------------------------------------------------------------------------------------
 		if(currentRook != null)
 		{
+			if(!(currentRook.checkValidMove(currentBoard, move))) //if move is not valid
+					{
+						return true; //not a true check but returns illegal move as expected
+					}
 			//move the piece
 					//Capture Check
 					if(Capture.canCapture(currentBoard, move, currentRook.white))
@@ -1263,6 +1281,10 @@ class King extends ReturnPiece
 		//TODO if piece found was a King:----------------------------------------------------------------------------------------------------------------
 		if(currentKing != null)
 		{
+			if(!(currentKing.checkValidMove(currentBoard, move))) //if move is not valid
+				{
+						return true; //not a true check but returns illegal move as expected
+				}
 				char startFile2 = move.substring(0, 1).toLowerCase().charAt(0);
         		int startRank2 = Integer.parseInt(move.substring(1, 2));
         		char endFile2 = move.substring(3, 4).toLowerCase().charAt(0);
