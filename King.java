@@ -136,10 +136,6 @@ class King extends ReturnPiece
 		if(this.hasMoved){
 			return false; //cannot castle since already has moved itself (will check for Rook later)
 		}
-
-		ArrayList<ReturnPiece> tempBoard = currentBoard;
-		ArrayList<ReturnPiece> tempBoard2 = currentBoard;
-		ArrayList<ReturnPiece> tempBoard3 = currentBoard;
 	
 
         char startFile = move.substring(0, 1).toLowerCase().charAt(0);
@@ -170,39 +166,16 @@ class King extends ReturnPiece
 					
 					//now check for King passing check
 
-					for(ReturnPiece rp: tempBoard){
-						if(rp.pieceType == ReturnPiece.PieceType.WK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f; //move the piece to fake position
-							rp.pieceRank = 1;
-							King tempKing = (King)rp;
-
-							if(tempKing.onCheck(tempBoard))
-							{
-							return false;
-							}
-						}
-						
-					}
-					for(ReturnPiece rp: tempBoard2){
-						if(rp.pieceType == ReturnPiece.PieceType.WK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g; //move the piece to fake position
-							rp.pieceRank = 1;
-							King tempKing = (King)rp;
-							if(tempKing.onCheck(tempBoard2))
-							{
-							return false;
-							}
-						}
-					}
-
-
 					
-					return true; //all conditions pass for white kingside castle
+
+							if(this.onCheck(currentBoard,"e1 f1"))
+								return false;
+
+							if(this.onCheck(currentBoard,"e1 g1"))
+								return false;
 
 
-					
+					return true; //all conditions pass for white kingside castle			
 
 				}
 				else if (startFile == 'e' && startRank == 1 && endRank == 1 && this.white && endFile == 'c') //White Queenside Castle----------------------------------
@@ -223,47 +196,10 @@ class King extends ReturnPiece
 						}
 					}
 
-					for(ReturnPiece rp: tempBoard)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.WK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d; //move the piece to fake position
-							rp.pieceRank = 1;
-							King tempKing = (King)rp;
-
-							if(tempKing.onCheck(tempBoard))
-							{
-							return false;
-							}
-						}
-						
-					}
-					for(ReturnPiece rp: tempBoard2)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.WK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c; //move the piece to fake position
-							rp.pieceRank = 1;
-							King tempKing = (King)rp;
-							if(tempKing.onCheck(tempBoard2))
-							{
-							return false;
-							}
-						}
-					}
-					for(ReturnPiece rp: tempBoard3)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.WK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b; //move the piece to fake position
-							rp.pieceRank = 1;
-							King tempKing = (King)rp;
-							if(tempKing.onCheck(tempBoard3))
-							{
-							return false;
-							}
-						}
-					}
+					if(this.onCheck(currentBoard,"e1 d1"))
+						return false;
+					if(this.onCheck(currentBoard,"e1 c1"))
+						return false;
 
 					
 					return true; //all conditions pass for white queenside castle
@@ -286,34 +222,11 @@ class King extends ReturnPiece
 
 					//now check for King passing check
 
-					for(ReturnPiece rp: tempBoard){
-						if(rp.pieceType == ReturnPiece.PieceType.BK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.f; //move the piece to fake position
-							rp.pieceRank = 8;
-							King tempKing = (King)rp;
+					if(this.onCheck(currentBoard,"e8 f8"))
+						return false;
 
-							if(tempKing.onCheck(tempBoard))
-							{
-							return false;
-							}
-						}
-						
-					}
-
-					for(ReturnPiece rp: tempBoard2){
-						if(rp.pieceType == ReturnPiece.PieceType.BK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.g; //move the piece to fake position
-							rp.pieceRank = 8;
-							King tempKing = (King)rp;
-
-							if(tempKing.onCheck(tempBoard2))
-							{
-							return false;
-							}
-						}
-					}
+					if(this.onCheck(currentBoard,"e8 g8"))
+						return false;
 
 					
 					return true; //all conditions pass for black kingside castle
@@ -337,47 +250,11 @@ class King extends ReturnPiece
 						}
 					}
 
-					for(ReturnPiece rp: tempBoard)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.BK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.d; //move the piece to fake position
-							rp.pieceRank = 8;
-							King tempKing = (King)rp;
+					if(this.onCheck(currentBoard,"e8 d8"))
+						return false;
+					if(this.onCheck(currentBoard,"e8 c8"))
+						return false;
 
-							if(tempKing.onCheck(tempBoard))
-							{
-							return false;
-							}
-						}
-						
-					}
-					for(ReturnPiece rp: tempBoard2)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.BK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.c; //move the piece to fake position
-							rp.pieceRank = 8;
-							King tempKing = (King)rp;
-							if(tempKing.onCheck(tempBoard2))
-							{
-							return false;
-							}
-						}
-					}
-					for(ReturnPiece rp: tempBoard3)
-					{
-						if(rp.pieceType == ReturnPiece.PieceType.BK)
-						{
-							rp.pieceFile = ReturnPiece.PieceFile.b; //move the piece to fake position
-							rp.pieceRank = 8;
-							King tempKing = (King)rp;
-							if(tempKing.onCheck(tempBoard3))
-							{
-							return false;
-							}
-						}
-					}
 
 					 //can't castle twice in a game
 					return true; //all conditions pass for black queenside castle
@@ -386,7 +263,7 @@ class King extends ReturnPiece
         }
 
         return false; //cannot castle
-    }//end of catstling method
+    }//end of castling method
 
 
 
@@ -1281,10 +1158,10 @@ class King extends ReturnPiece
 		//TODO if piece found was a King:----------------------------------------------------------------------------------------------------------------
 		if(currentKing != null)
 		{
-			if(!(currentKing.checkValidMove(currentBoard, move))) //if move is not valid
-				{
-						return true; //not a true check but returns illegal move as expected
-				}
+			//if(!(currentKing.checkValidMove(currentBoard, move))) //if move is not valid
+				//{
+						//return true; //not a true check but returns illegal move as expected
+				//}
 				char startFile2 = move.substring(0, 1).toLowerCase().charAt(0);
         		int startRank2 = Integer.parseInt(move.substring(1, 2));
         		char endFile2 = move.substring(3, 4).toLowerCase().charAt(0);
