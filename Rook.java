@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 class Rook extends ReturnPiece {
 	boolean white;
+	boolean hasMoved = false;
+
 	Rook(boolean white)
 	{
 		if(white == true)

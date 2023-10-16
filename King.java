@@ -4,6 +4,7 @@ import java.util.ArrayList;
 class King extends ReturnPiece 
 {
 	private boolean castlingDone = false; //castling CAN BE DONE ONCE
+	boolean hasMoved = false;
 	boolean white;
 	
 
@@ -33,10 +34,102 @@ class King extends ReturnPiece
 		return this.castlingDone;
 	}
 	//edit castling status 
-	public void setCastlingDone(boolean castlingDone)
+	public void setCastlingDone()
 	{
-		this.castlingDone = castlingDone;
+		this.castlingDone = true;
 	}
+
+	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
+	{	
+		char startFile = move.substring(0, 1).toLowerCase().charAt(0);
+        int startRank = Integer.parseInt(move.substring(1, 2));
+        char endFile = move.substring(3, 4).toLowerCase().charAt(0);
+        int endRank = Integer.parseInt(move.substring(4, 5));
+
+        int fileDiff = Math.abs(endFile - startFile);
+        int rankDiff = Math.abs(endRank - startRank);
+
+        if (fileDiff <= 1 && rankDiff <= 1) {
+            return true;
+        }
+		//else if(this.kingCastling(currentBoard, move)) //if castling is valid
+		//{
+		//	return true;
+		//}
+		else 
+		{
+            return false;
+        }
+	}
+
+	/*boolean kingCastling(ArrayList<ReturnPiece> currentBoard, String move) //can the king castle
+	{
+		if(this.isCastlingDone()){
+			return false; //cannot castle since already has castled
+		}
+		if(this.hasMoved()){
+			return false; //cannot castle since already has moved itself (will check for Rook later)
+		}
+
+        char startFile = move.substring(0, 1).toLowerCase().charAt(0);
+        int startRank = Integer.parseInt(move.substring(1, 2));
+        char endFile = move.substring(3, 1).toLowerCase().charAt(0);
+        int endRank = Integer.parseInt(move.substring(4, 5));
+
+        int fileDiff = Math.abs(endFile - startFile);
+        int rankDiff = Math.abs(endRank - startRank);
+
+        if (fileDiff == 2 && rankDiff == 0) //move is valid
+		{
+
+            if (startFile == 'e' && startRank == 1 && endRank == 1 && this.white) {
+
+                for (ReturnPiece piece : currentBoard) {
+                    if (piece.toString().equals("h1 R") && piece instanceof Rook) {
+
+                        piece.setPiecePosition("h1 f1");
+                        break;
+                    }
+                }
+
+
+                this.setPiecePosition("e1 g1");
+
+
+                this.setCastlingDone(true);
+
+                return true;
+            } else if (startFile == 'e' && startRank == 1 && endRank == 1 && !this.white) {
+
+                if (this.castlingDone) {
+
+                    return false;
+                }
+
+
+                for (ReturnPiece piece : currentBoard) {
+                    if (piece.toString().equals("h8 r") && piece instanceof Rook) {
+
+                        piece.setPiecePosition("h8 f8");
+                        break;
+                    }
+                }
+
+
+                this.setPiecePosition("e8 g8");
+
+
+                this.setCastlingDone(true);
+
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+
+
+
 
 	
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoard) //returns true if passed board parameter is in check
@@ -399,26 +492,6 @@ class King extends ReturnPiece
 		//TODO:finish onCheckMate
 		return false;
 	}
-
-	boolean checkValidMove(ArrayList<ReturnPiece> currentBoard, String move)
-	{	
-		char startFile = move.substring(0, 1).toLowerCase().charAt(0);
-        int startRank = Integer.parseInt(move.substring(1, 2));
-        char endFile = move.substring(3, 4).toLowerCase().charAt(0);
-        int endRank = Integer.parseInt(move.substring(4, 5));
-
-        int fileDiff = Math.abs(endFile - startFile);
-        int rankDiff = Math.abs(endRank - startRank);
-
-        if (fileDiff <= 1 && rankDiff <= 1) {
-
-            return true;
-        } 
-		else 
-		{
-
-            return false;
-        }
-	}
+	
 
 }

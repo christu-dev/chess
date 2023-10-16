@@ -761,7 +761,7 @@ public class Chess {
 									rp = tempPawn;
 								}
 							}
-							
+
 							ReturnPiece PromotionPiece = null;
 							for (ReturnPiece rp: play.piecesOnBoard){
 								if(rp.equals(currentPawn))
@@ -1185,6 +1185,7 @@ public class Chess {
 								}
 							}
 
+
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKing))
 									{
@@ -1222,9 +1223,16 @@ public class Chess {
 											rp.pieceFile = ReturnPiece.PieceFile.h;
 										}
 
-										rp.pieceRank = endRank;						
+										rp.pieceRank = endRank;	
+										
+										King tempKing = (King)rp;
+										tempKing.hasMoved = true;
+										rp = tempKing;
+
+										//if castle update Rook position too (rook.hasmoved becomes true)
 									}
 								}
+
 							if(currBK.onCheckMate(play.piecesOnBoard)){
 								if(move.contains("draw?")) //draw overlaps everything
 								{
@@ -1329,7 +1337,12 @@ public class Chess {
 											rp.pieceFile = ReturnPiece.PieceFile.h;
 										}
 
-										rp.pieceRank = endRank;						
+										rp.pieceRank = endRank;
+										
+										King tempKing = (King)rp;
+										tempKing.hasMoved = true;
+										rp = tempKing;
+										//if castle update Rook position too (rook.hasmoved becomes true)
 									}
 								}
 							if(currWK.onCheckMate(play.piecesOnBoard)){
@@ -1449,7 +1462,13 @@ public class Chess {
 								rp.pieceFile = ReturnPiece.PieceFile.h;
 							}
 
-							rp.pieceRank = endRank;						
+							rp.pieceRank = endRank;
+							
+							King tempKing = (King)rp;
+							tempKing.hasMoved = true;
+							rp = tempKing;
+							//if castle update Rook position too (rook.hasmoved becomes true)
+
 						}
 					}
 					//checks checkmate after piece is moved
@@ -2422,7 +2441,12 @@ public class Chess {
 											rp.pieceFile = ReturnPiece.PieceFile.h;
 										}
 
-										rp.pieceRank = endRank;						
+										rp.pieceRank = endRank;
+										
+										Rook tempRook = (Rook)rp;
+										tempRook.hasMoved = true;
+										rp = tempRook;
+										
 									}
 								}
 							if(currBK.onCheckMate(play.piecesOnBoard)){
@@ -2529,7 +2553,12 @@ public class Chess {
 											rp.pieceFile = ReturnPiece.PieceFile.h;
 										}
 
-										rp.pieceRank = endRank;						
+										rp.pieceRank = endRank;
+
+										Rook tempRook = (Rook)rp;
+										tempRook.hasMoved = true;
+										rp = tempRook;
+																
 									}
 								}
 							if(currWK.onCheckMate(play.piecesOnBoard)){
@@ -2649,7 +2678,12 @@ public class Chess {
 								rp.pieceFile = ReturnPiece.PieceFile.h;
 							}
 
-							rp.pieceRank = endRank;						
+							rp.pieceRank = endRank;		
+
+							Rook tempRook = (Rook)rp;
+							tempRook.hasMoved = true;
+							rp = tempRook;
+											
 						}
 					}
 					//checks checkmate after piece is moved
