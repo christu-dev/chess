@@ -52,28 +52,33 @@ class King extends ReturnPiece
         if (fileDiff <= 1 && rankDiff <= 1) {
             return true;
         }
-		//else if(this.kingCastling(currentBoard, move)) //if castling is valid
-		//{
-		//	return true;
-		//}
+		else if(this.kingCastling(currentBoard, move)) //if castling is valid
+		{
+			return true;
+		}
 		else 
 		{
             return false;
         }
 	}
 
-	/*boolean kingCastling(ArrayList<ReturnPiece> currentBoard, String move) //can the king castle
+	boolean kingCastling(ArrayList<ReturnPiece> currentBoard, String move) //can the king castle
 	{
 		if(this.isCastlingDone()){
 			return false; //cannot castle since already has castled
 		}
-		if(this.hasMoved()){
+		if(this.hasMoved){
 			return false; //cannot castle since already has moved itself (will check for Rook later)
 		}
 
+		ArrayList<ReturnPiece> tempBoard = currentBoard;
+		ArrayList<ReturnPiece> tempBoard2 = currentBoard;
+		ArrayList<ReturnPiece> tempBoard3 = currentBoard;
+	
+
         char startFile = move.substring(0, 1).toLowerCase().charAt(0);
         int startRank = Integer.parseInt(move.substring(1, 2));
-        char endFile = move.substring(3, 1).toLowerCase().charAt(0);
+        char endFile = move.substring(3, 4).toLowerCase().charAt(0);
         int endRank = Integer.parseInt(move.substring(4, 5));
 
         int fileDiff = Math.abs(endFile - startFile);
@@ -82,50 +87,240 @@ class King extends ReturnPiece
         if (fileDiff == 2 && rankDiff == 0) //move is valid
 		{
 
-            if (startFile == 'e' && startRank == 1 && endRank == 1 && this.white) {
+				if (startFile == 'e' && startRank == 1 && endRank == 1 && this.white && endFile == 'g') //White king side castle----------------------------------
+				{
 
-                for (ReturnPiece piece : currentBoard) {
-                    if (piece.toString().equals("h1 R") && piece instanceof Rook) {
+					//IN THE WAY CHECK
+					for(ReturnPiece rp : currentBoard){
+						if(rp.toString().substring(0,2).equals("f1")) //f1
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("g1")) //g1
+						{
+							return false;
+						}
+					}
+					
+					//now check for King passing check
 
-                        piece.setPiecePosition("h1 f1");
-                        break;
-                    }
-                }
+					for(ReturnPiece rp: tempBoard){
+						if(rp.pieceType == ReturnPiece.PieceType.WK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f; //move the piece to fake position
+							rp.pieceRank = 1;
+							King tempKing = (King)rp;
+
+							if(tempKing.onCheck(tempBoard))
+							{
+							return false;
+							}
+						}
+						
+					}
+					for(ReturnPiece rp: tempBoard2){
+						if(rp.pieceType == ReturnPiece.PieceType.WK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g; //move the piece to fake position
+							rp.pieceRank = 1;
+							King tempKing = (King)rp;
+							if(tempKing.onCheck(tempBoard2))
+							{
+							return false;
+							}
+						}
+					}
 
 
-                this.setPiecePosition("e1 g1");
+					
+					return true; //all conditions pass for white kingside castle
 
 
-                this.setCastlingDone(true);
+					
 
-                return true;
-            } else if (startFile == 'e' && startRank == 1 && endRank == 1 && !this.white) {
+				}
+				else if (startFile == 'e' && startRank == 1 && endRank == 1 && this.white && endFile == 'c') //White Queenside Castle----------------------------------
+				{
+					//IN THE WAY CHECK
+					for(ReturnPiece rp : currentBoard){
+						if(rp.toString().substring(0,2).equals("d1")) //d1
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("c1")) //c1
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("b1")) //b1
+						{
+							return false;
+						}
+					}
 
-                if (this.castlingDone) {
+					for(ReturnPiece rp: tempBoard)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.WK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d; //move the piece to fake position
+							rp.pieceRank = 1;
+							King tempKing = (King)rp;
 
-                    return false;
-                }
+							if(tempKing.onCheck(tempBoard))
+							{
+							return false;
+							}
+						}
+						
+					}
+					for(ReturnPiece rp: tempBoard2)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.WK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c; //move the piece to fake position
+							rp.pieceRank = 1;
+							King tempKing = (King)rp;
+							if(tempKing.onCheck(tempBoard2))
+							{
+							return false;
+							}
+						}
+					}
+					for(ReturnPiece rp: tempBoard3)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.WK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b; //move the piece to fake position
+							rp.pieceRank = 1;
+							King tempKing = (King)rp;
+							if(tempKing.onCheck(tempBoard3))
+							{
+							return false;
+							}
+						}
+					}
+
+					
+					return true; //all conditions pass for white queenside castle
 
 
-                for (ReturnPiece piece : currentBoard) {
-                    if (piece.toString().equals("h8 r") && piece instanceof Rook) {
+				}
+				else if (startFile == 'e' && startRank == 8 && endRank == 8 && !this.white && endFile == 'g') //Black Kingside Castle----------------------------------
+				{
+					//IN THE WAY CHECK
+					for(ReturnPiece rp : currentBoard){
+						if(rp.toString().substring(0,2).equals("f8")) //f8
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("g8")) //g8
+						{
+							return false;
+						}
+					}
 
-                        piece.setPiecePosition("h8 f8");
-                        break;
-                    }
-                }
+					//now check for King passing check
 
+					for(ReturnPiece rp: tempBoard){
+						if(rp.pieceType == ReturnPiece.PieceType.BK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.f; //move the piece to fake position
+							rp.pieceRank = 8;
+							King tempKing = (King)rp;
 
-                this.setPiecePosition("e8 g8");
+							if(tempKing.onCheck(tempBoard))
+							{
+							return false;
+							}
+						}
+						
+					}
 
+					for(ReturnPiece rp: tempBoard2){
+						if(rp.pieceType == ReturnPiece.PieceType.BK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.g; //move the piece to fake position
+							rp.pieceRank = 8;
+							King tempKing = (King)rp;
 
-                this.setCastlingDone(true);
+							if(tempKing.onCheck(tempBoard2))
+							{
+							return false;
+							}
+						}
+					}
 
-                return true;
-            }
+					
+					return true; //all conditions pass for black kingside castle
+
+				}
+				else if(startFile == 'e' && startRank == 8 && endRank == 8 && !this.white && endFile == 'c') //Black Queenside Castle----------------------------------
+				{
+					//IN THE WAY CHECK
+					for(ReturnPiece rp : currentBoard){
+						if(rp.toString().substring(0,2).equals("d8")) //d8
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("c8")) //c8
+						{
+							return false;
+						}
+						if(rp.toString().substring(0,2).equals("b8")) //b8
+						{
+							return false;
+						}
+					}
+
+					for(ReturnPiece rp: tempBoard)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.BK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.d; //move the piece to fake position
+							rp.pieceRank = 8;
+							King tempKing = (King)rp;
+
+							if(tempKing.onCheck(tempBoard))
+							{
+							return false;
+							}
+						}
+						
+					}
+					for(ReturnPiece rp: tempBoard2)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.BK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.c; //move the piece to fake position
+							rp.pieceRank = 8;
+							King tempKing = (King)rp;
+							if(tempKing.onCheck(tempBoard2))
+							{
+							return false;
+							}
+						}
+					}
+					for(ReturnPiece rp: tempBoard3)
+					{
+						if(rp.pieceType == ReturnPiece.PieceType.BK)
+						{
+							rp.pieceFile = ReturnPiece.PieceFile.b; //move the piece to fake position
+							rp.pieceRank = 8;
+							King tempKing = (King)rp;
+							if(tempKing.onCheck(tempBoard3))
+							{
+							return false;
+							}
+						}
+					}
+
+					 //can't castle twice in a game
+					return true; //all conditions pass for black queenside castle
+
+				}
         }
-        return false;
-    }*/
+
+        return false; //cannot castle
+    }//end of catstling method
 
 
 

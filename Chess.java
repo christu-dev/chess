@@ -1153,7 +1153,13 @@ public class Chess {
 				{
 					if(currentPlayer == chess.Chess.Player.white && white_currently_checked) //if currently check and player is white
 					{
-						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						if(currentKing.kingCastling(play.piecesOnBoard, move)) //castle attempt during check
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+							System.out.println("trying to castle while in check");
+							return play;
+						}
+						else if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
 							return play; //currently white check - white moves and fails to leave check
@@ -1268,7 +1274,13 @@ public class Chess {
 					}
 					else if(currentPlayer == chess.Chess.Player.black && black_currently_checked) //if currently check and player is black
 					{
-						if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
+						if(currentKing.kingCastling(play.piecesOnBoard, move)) //castle attempt during check
+						{
+							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
+							System.out.println("trying to castle while in check");
+							return play;
+						}
+						else if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
 							return play; //currently black check - black moves and fails to leave check
@@ -1403,20 +1415,13 @@ public class Chess {
 	
 					//move the piece
 
-							//Capture Check
+					
 
-							if(Capture.canCapture(play.piecesOnBoard, move, currentKing.white)){
-								ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
-								play.piecesOnBoard = tempboard; //call this right before any move is made
-							}
-							else
-							{
-								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
-								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
-							}
+							
 
-												//en passant limiter
+					
+
+							//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
@@ -1424,6 +1429,136 @@ public class Chess {
 									rp = tempPawn;
 								}
 							}
+
+
+						
+						CastleRookEdit:
+						if(true)
+						{
+							//Rook checking
+							if(endFile.charAt(0) == 'g' && endRank == 1) //white kingside
+							{
+								for (ReturnPiece rp : play.piecesOnBoard)
+								{
+									
+									if(rp.toString().substring(0,2).equals("h1") && rp instanceof Rook)
+									{
+										Rook tempR = (Rook)rp;
+										if(tempR.hasMoved)
+										{
+											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+											System.out.println("Rook has moved - no castling allowed.");
+											return play;
+										}
+										else
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+											currentKing.setCastlingDone();
+											rp = currentKing;
+											break CastleRookEdit; 
+										}
+
+									}
+								}
+
+							}
+							else if(endFile.charAt(0) == 'c' && endRank == 1) //white queenside
+							{
+								for (ReturnPiece rp : play.piecesOnBoard)
+								{
+									
+									if(rp.toString().substring(0,2).equals("a1") && rp instanceof Rook)
+									{
+										Rook tempR = (Rook)rp;
+										if(tempR.hasMoved)
+										{
+											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+											System.out.println("Rook has moved - no castling allowed.");
+											return play;
+										}
+										else
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+											currentKing.setCastlingDone();
+											rp = currentKing;
+											break CastleRookEdit;
+										}
+
+									}
+								}
+
+							}
+							else if(endFile.charAt(0) == 'g' && endRank == 8) //black kingside 
+							{
+								for (ReturnPiece rp : play.piecesOnBoard)
+								{
+									
+									if(rp.toString().substring(0,2).equals("h8") && rp instanceof Rook)
+									{
+										Rook tempR = (Rook)rp;
+										if(tempR.hasMoved)
+										{
+											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+											System.out.println("Rook has moved - no castling allowed.");
+											return play;
+										}
+										else
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.f;
+											currentKing.setCastlingDone();
+											rp = currentKing;
+											break CastleRookEdit;
+										}
+
+									}
+								}
+
+							}
+							else if(endFile.charAt(0) == 'c' && endRank == 8) //black queenside
+							{
+								for (ReturnPiece rp : play.piecesOnBoard)
+								{
+									
+									if(rp.toString().substring(0,2).equals("a8") && rp instanceof Rook)
+									{
+										Rook tempR = (Rook)rp;
+										if(tempR.hasMoved)
+										{
+											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+											System.out.println("Rook has moved - no castling allowed.");
+											return play;
+										}
+										else
+										{
+											rp.pieceFile = ReturnPiece.PieceFile.d;
+											currentKing.setCastlingDone();
+											rp = currentKing;
+											break CastleRookEdit;
+										}
+
+									}
+								}
+								
+							} 
+							else
+							{
+								//Capture Check
+								if(Capture.canCapture(play.piecesOnBoard, move, currentKing.white)){
+									ArrayList<ReturnPiece> tempboard = Capture.takePiece(play.piecesOnBoard, move);
+									play.piecesOnBoard = tempboard; //call this right before any move is made
+								}
+								else
+								{
+									play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
+									System.out.println("Cannot move there. WTF");
+									return play; //collision: cannot move to target piece. (maybe same color of moving piece)
+								}
+
+							}
+							
+							
+						}//end of castling rook edit
+						//King continues to move itself
 
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentKing))
