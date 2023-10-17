@@ -359,14 +359,14 @@ public class Chess {
 								System.out.println("Cannot move there.");
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
-							//en passant limiter
+							/*//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentBishop))
@@ -466,14 +466,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-							//en passant limiter
+						/* 	//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentBishop))
@@ -585,14 +585,14 @@ public class Chess {
 							return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 						}
 
-					//en passant limiter
+					/*//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 							
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentBishop))
@@ -750,7 +750,7 @@ public class Chess {
 							    ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(play.piecesOnBoard, move, currentPawn.white);
 								play.piecesOnBoard = tempboard; //call this right before any move is made.
 
-							//en passant limiter
+							/*//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp == currentPawn)
 								{
@@ -761,7 +761,7 @@ public class Chess {
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 							ReturnPiece PromotionPiece = null;
 							for (ReturnPiece rp: play.piecesOnBoard){
@@ -807,6 +807,9 @@ public class Chess {
 									PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 								}
 							}
+
+							
+
 							//promotion if eligible
 							if(PromotionPiece != null){
 								play.piecesOnBoard.remove(currentPawn);
@@ -831,6 +834,18 @@ public class Chess {
 								black_currently_checked = true;
 								play.message = ReturnPlay.Message.CHECK;
 								currentPlayer = chess.Chess.Player.black; //player switches
+									if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 								return play;
 							}
 							else //not check/checkmate after move
@@ -842,6 +857,18 @@ public class Chess {
 								}
 								currentPlayer = chess.Chess.Player.black; //player switches
 								play.message = null;
+									if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 								return play; //white moves and leaves check
 							}
 						}
@@ -862,7 +889,7 @@ public class Chess {
 								play.piecesOnBoard = tempboard; //call this right before any move is made.
 
 
-								//en passant limiter
+								/*//en passant limiter
 								for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp == currentPawn)
 								{
@@ -873,7 +900,7 @@ public class Chess {
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 							
 							ReturnPiece PromotionPiece = null;
 							for (ReturnPiece rp: play.piecesOnBoard){
@@ -918,7 +945,11 @@ public class Chess {
 									Pawn promoteChecker = (Pawn)rp; //make a pawn object set to rp after it has moved
 									PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 								}
+							
+							
 							}
+
+							
 							//promotion if eligible
 							if(PromotionPiece != null){
 								play.piecesOnBoard.remove(currentPawn);
@@ -943,6 +974,18 @@ public class Chess {
 								white_currently_checked = true;
 								play.message = ReturnPlay.Message.CHECK;
 								currentPlayer = chess.Chess.Player.white; //player switches
+								if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 								return play;
 							}
 							else //not check/checkmate after move
@@ -955,6 +998,18 @@ public class Chess {
 								currentPlayer = chess.Chess.Player.white; //player switches
 								play.message = null;
 								System.out.println("black moves and leaves check");
+								if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 								return play; //black moves and leaves check
 							}
 						}
@@ -987,7 +1042,7 @@ public class Chess {
 					play.piecesOnBoard = tempboard; //call this right before any move is made.
 					
 
-                    //en passant limiter
+                    /*//en passant limiter
 								for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp == currentPawn)
 								{
@@ -998,7 +1053,7 @@ public class Chess {
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 					
 					System.out.println("normal move - pawn");
@@ -1047,6 +1102,16 @@ public class Chess {
 							PromotionPiece = promoteChecker.pawnPromotion(move); //run pawnPromotion on it every time to see if promotion is valid						
 						}
 					}
+
+					
+					
+					/*for (ReturnPiece rp : play.piecesOnBoard){
+								if(rp.toString().contains("P")){
+									Pawn tempPawn = (Pawn)rp;
+									System.out.println(tempPawn+", hasMoved: "+tempPawn.hasFirstMoved());
+								}
+							}*/
+							
 					//promotion if eligible
 					if(PromotionPiece != null){
 						play.piecesOnBoard.remove(currentPawn);
@@ -1089,11 +1154,35 @@ public class Chess {
 						if(currentPlayer == chess.Chess.Player.white)
 						{
 							currentPlayer = chess.Chess.Player.black;
+							if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 							return play;
 						}
 						if(currentPlayer == chess.Chess.Player.black)
 						{
 							currentPlayer = chess.Chess.Player.white;
+							if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 							return play;
 						} 
 					}					
@@ -1109,12 +1198,36 @@ public class Chess {
 						{
 							currentPlayer = chess.Chess.Player.black;
 							play.message = null;
+							if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 							return play;
 						}
 						if(currentPlayer == chess.Chess.Player.black)
 						{
 							currentPlayer = chess.Chess.Player.white;
 							play.message = null;
+							if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else if(move.equals(startFile+startRank+" "+endFile+(startRank-2)))
+									{
+										currentPawn.setFirstMoved();
+									}
+									else
+									{
+										currentPawn.notFirstMoved();
+									}
 							return play;
 						}
 					}
@@ -1184,14 +1297,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 
 								for (ReturnPiece rp: play.piecesOnBoard){
@@ -1305,14 +1418,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 				//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKing))
@@ -1423,14 +1536,14 @@ public class Chess {
 
 					
 
-							//en passant limiter
+							/*//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 
 						
@@ -1732,14 +1845,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+											/* 	//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentQueen))
@@ -1838,14 +1951,14 @@ public class Chess {
 								System.out.println("Cannot move there.");
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 							
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentQueen))
@@ -1957,14 +2070,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 				//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 	
 					
 					for (ReturnPiece rp: play.piecesOnBoard){
@@ -2131,14 +2244,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKnight))
@@ -2238,14 +2351,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentKnight))
@@ -2360,14 +2473,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 					
 					for (ReturnPiece rp: play.piecesOnBoard){
@@ -2534,14 +2647,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 							
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentRook))
@@ -2646,14 +2759,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 								for (ReturnPiece rp: play.piecesOnBoard){
 									if(rp.equals(currentRook))
@@ -2771,14 +2884,14 @@ public class Chess {
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
-												//en passant limiter
+							/* 					//en passant limiter
 							for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
 									tempPawn.notFirstMoved();
 									rp = tempPawn;
 								}
-							}
+							}*/
 
 					for (ReturnPiece rp: play.piecesOnBoard){
 						if(rp.equals(currentRook))

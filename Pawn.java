@@ -24,6 +24,9 @@ class Pawn extends ReturnPiece {
 	boolean hasFirstMoved(){ //for en passant
 		return this.firstMoved;
 	}
+    void setFirstMoved(){
+        this.firstMoved = true;
+    }
     void notFirstMoved(){
         this.firstMoved = false;
     }
@@ -112,7 +115,7 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
-                    this.firstMoved = false;
+                    //this.firstMoved = false;
                     return true; //no piece in the way, validate pawn movement
                 } 
 
@@ -128,7 +131,7 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
-					this.firstMoved = true;
+					//this.firstMoved = true;
                     return true;
                 }
             }
@@ -145,7 +148,7 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
-                    this.firstMoved = false;
+                    //this.firstMoved = false;
                     return true;
                 } else if (rankDiff == -2 && startRank == 7) {
                     
@@ -157,13 +160,14 @@ class Pawn extends ReturnPiece {
                             return false;
                         }
                     }
-					this.firstMoved = true;
+					//this.firstMoved = true;
                     return true;
                 }
             }
         }
         else if(Capture.canPawnCapture(currentBoard, move, this.white)){
             
+                System.out.println("got here");
                  return true;       
         }
         System.out.println("Regular move validate failed. canPawnCapture failed.");

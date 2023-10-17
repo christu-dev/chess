@@ -599,6 +599,11 @@ class King extends ReturnPiece
 				piece2.pieceRank = piece.pieceRank;
 				piece2.pieceFile = piece.pieceFile;
 				piece2.pieceType = piece.pieceType;
+				if(temp.hasFirstMoved()){
+					Pawn temp2 = (Pawn)piece2;
+					temp2.setFirstMoved();
+					piece2 = temp2;
+				}
 				currentBoard.add(piece2);
 			}
 			else if(piece instanceof Knight){
@@ -723,7 +728,7 @@ class King extends ReturnPiece
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
-					//en passant limiter
+					/*//en passant limiter
 					for (ReturnPiece rp : currentBoard)
 						{
 						if(rp.toString().contains("P")){
@@ -731,7 +736,7 @@ class King extends ReturnPiece
 								tempPawn.notFirstMoved();
 								rp = tempPawn;
 							}
-						}
+						}*/
 
 					//piece is updated
 					King currKing = null;		
@@ -804,7 +809,7 @@ class King extends ReturnPiece
 					ArrayList<ReturnPiece> tempboard = Capture.pawntakePiece(currentBoard, move, currentPawn.white);
 					currentBoard = tempboard; //call this right before any move is made.
 
-                    //en passant limiter
+                   /*  //en passant limiter
 					for (ReturnPiece rp : currentBoard)
 						{
 						if(rp == currentPawn)
@@ -816,7 +821,7 @@ class King extends ReturnPiece
 							tempPawn.notFirstMoved();
 							rp = tempPawn;
 						}
-					}
+					}*/
 
 					King currKing = null;
 					ReturnPiece PromotionPiece = null;
@@ -906,7 +911,7 @@ class King extends ReturnPiece
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
-					//en passant limiter
+					/*//en passant limiter
 					for (ReturnPiece rp : currentBoard)
 						{
 						if(rp.toString().contains("P")){
@@ -914,7 +919,7 @@ class King extends ReturnPiece
 								tempPawn.notFirstMoved();
 								rp = tempPawn;
 							}
-						}
+						}*/
 
 					//piece is updated
 					King currKing = null;		
@@ -998,7 +1003,7 @@ class King extends ReturnPiece
 				}
 
 				
-				//en passant limiter
+				/*//en passant limiter
 				for (ReturnPiece rp : currentBoard)
 					{
 					if(rp.toString().contains("P")){
@@ -1006,7 +1011,7 @@ class King extends ReturnPiece
 							tempPawn.notFirstMoved();
 							rp = tempPawn;
 						}
-					}
+					}*/
 
 				//piece is updated
 				King currKing = null;		
@@ -1086,7 +1091,7 @@ class King extends ReturnPiece
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
-					//en passant limiter
+					/*//en passant limiter
 					for (ReturnPiece rp : currentBoard)
 						{
 						if(rp.toString().contains("P")){
@@ -1094,7 +1099,7 @@ class King extends ReturnPiece
 								tempPawn.notFirstMoved();
 								rp = tempPawn;
 							}
-						}
+						}*/
 
 					//piece is updated
 					King currKing = null;		
@@ -1169,6 +1174,15 @@ class King extends ReturnPiece
 
         		int fileDiff = Math.abs(endFile2 - startFile2);
         		int rankDiff = Math.abs(endRank2 - startRank2);
+
+				if(startFile2 < 'a' || startFile2 > 'h' || startRank2 < 1 || startRank2 > 8){
+				//System.out.println("out of bounds");
+					return true; //bounds checking but still returns illegal move
+				}
+				if(endFile2 < 'a' || endFile2 > 'h' || endRank2 < 1 || endRank2 > 8){
+				//System.out.println("out of bounds");
+					return true; //bounds checking but still returns illegal move
+				}
 
 				if (this.onCheck(currentBoard) && fileDiff > 1 || rankDiff > 1){
 					System.out.println("ooncheck future King rank diff failed");

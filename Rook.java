@@ -56,7 +56,7 @@ class Rook extends ReturnPiece {
 				Chess.possibleMoves.add(this.toString().substring(0,2) + " " + (char)(this.toString().charAt(0)) + "" +(int)((Integer.parseInt(this.toString().substring(1,2)))-i));		
 		}
 
-        //return possibleMoves; //56 possible locations, gets weeded out by checkValidMove
+        
     }
 
 

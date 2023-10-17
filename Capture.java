@@ -127,11 +127,21 @@ public class Capture {
 
                 //TODO en passant
 
+                /*for (ReturnPiece piece : currentBoard){
+                    if(piece.pieceType == ReturnPiece.PieceType.WP || piece.pieceType == ReturnPiece.PieceType.BP)
+                    {
+                        Pawn temp = (Pawn)piece;
+                    System.out.println(temp+", firstMoved: "+temp.firstMoved);
+                    }
+                    
+                }*/
+
                 Pawn currPawn = null;
                 for (ReturnPiece piece : currentBoard){
                     if(white){
                         if (piece.toString().equals(""+endFile+(endRank-1)+":BP")) //one under white pawn is black pawn
                         {
+                           // System.out.println("made it here - white"); gets here but firstMoved is false
                             currPawn = (Pawn)piece;
                             if(currPawn.firstMoved == true) //pawn just made initial two square advance
                             {
@@ -144,6 +154,7 @@ public class Capture {
                     else if(!white){
                         if (piece.toString().equals(""+endFile+(endRank+1)+":WP"))  //one above black pawn is white pawn
                         {
+                           // System.out.println("made it here - black");
                             currPawn = (Pawn)piece;
                             if(currPawn.firstMoved == true) //pawn just made initial two square advance
                             {
