@@ -99,7 +99,7 @@ public class Chess {
 		//If Player did not move
 		if (startFile.equals(endFile) && startRank == endRank) {
             play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			//System.out.println("did not move");
+			
 			return play;
         }
 
@@ -108,12 +108,12 @@ public class Chess {
 		//Illegal State: Out of board Bounds
 		if(startFile.charAt(0) < 'a' || startFile.charAt(0) > 'h' || startRank < 1 || startRank > 8){
 			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			//System.out.println("out of bounds");
+			
 			return play;
 		}
 		if(endFile.charAt(0) < 'a' || endFile.charAt(0) > 'h' || endRank < 1 || endRank > 8){
 			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			//System.out.println("out of bounds");
+			
 			return play;
 		}
 
@@ -133,8 +133,7 @@ public class Chess {
 		for (ReturnPiece rp: play.piecesOnBoard){
 	
 			//testing: this WORKS AND arraylist is populated: 
-			//System.out.println(rp.toString());
-			//System.out.println(rp.toString().substring(0,2));
+			
 			//FIND TYPE OF PIECE AT ORIGIN
 
 			//Bishop Check-------------
@@ -156,7 +155,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("bishop picked wrong move ill move");
+					
 					return play;
 				}
 				
@@ -179,7 +178,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("pawn picked wrong move ill move");
+					
 					return play;
 				}
 			}
@@ -201,7 +200,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("king picked wrong move ill move");
+					
 					return play;
 				}
 			}
@@ -223,7 +222,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("queen picked wrong move ill move");
+					
 					return play;
 				}
 			}
@@ -245,7 +244,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("knight picked wrong move ill move");
+					
 					return play;
 				} 
 			}
@@ -267,7 +266,7 @@ public class Chess {
 				else
 				{	//picked wrong color
 					play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					//System.out.println("Rook picked wrong move ill move");
+					
 					return play;
 				}
 			}
@@ -277,7 +276,7 @@ public class Chess {
 
 		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null){
 			play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			//System.out.println("PIECE DOESNT EXIST");
+			
 			return play;
 		}
 
@@ -311,7 +310,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("bishop invalid movement ill move");
+				
 				return play;
 			}
 			else //move is valid
@@ -356,7 +355,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 							/*//en passant limiter
@@ -462,7 +461,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -581,7 +580,7 @@ public class Chess {
 						else
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-							System.out.println("Cannot move there.");
+							
 							return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 						}
 
@@ -711,7 +710,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("pawn invalid movement ill move");
+				
 				return play;
 			}
 			else //move is valid
@@ -997,7 +996,7 @@ public class Chess {
 								}
 								currentPlayer = chess.Chess.Player.white; //player switches
 								play.message = null;
-								System.out.println("black moves and leaves check");
+								
 								if(move.equals(startFile+startRank+" "+endFile+(startRank+2)))
 									{
 										currentPawn.setFirstMoved();
@@ -1056,7 +1055,7 @@ public class Chess {
 							}*/
 
 					
-					System.out.println("normal move - pawn");
+					
 
 					ReturnPiece PromotionPiece = null;
 					for (ReturnPiece rp: play.piecesOnBoard){
@@ -1108,7 +1107,7 @@ public class Chess {
 					/*for (ReturnPiece rp : play.piecesOnBoard){
 								if(rp.toString().contains("P")){
 									Pawn tempPawn = (Pawn)rp;
-									System.out.println(tempPawn+", hasMoved: "+tempPawn.hasFirstMoved());
+									
 								}
 							}*/
 							
@@ -1242,7 +1241,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("king invalid movement ill move");
+				
 				return play;
 			}
 			else //move is valid
@@ -1271,7 +1270,7 @@ public class Chess {
 						if(currentKing.kingCastling(play.piecesOnBoard, move)) //castle attempt during check
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-							System.out.println("trying to castle while in check");
+							
 							return play;
 						}
 						else if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
@@ -1293,7 +1292,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -1392,7 +1391,7 @@ public class Chess {
 						if(currentKing.kingCastling(play.piecesOnBoard, move)) //castle attempt during check
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-							System.out.println("trying to castle while in check");
+							
 							return play;
 						}
 						else if(currBK.onCheck(play.piecesOnBoard, move))//simulates the move in future
@@ -1414,7 +1413,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -1562,7 +1561,7 @@ public class Chess {
 										if(tempR.hasMoved)
 										{
 											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-											System.out.println("Rook has moved - no castling allowed.");
+						
 											return play;
 										}
 										else
@@ -1588,7 +1587,7 @@ public class Chess {
 										if(tempR.hasMoved)
 										{
 											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-											System.out.println("Rook has moved - no castling allowed.");
+											
 											return play;
 										}
 										else
@@ -1614,7 +1613,7 @@ public class Chess {
 										if(tempR.hasMoved)
 										{
 											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-											System.out.println("Rook has moved - no castling allowed.");
+											
 											return play;
 										}
 										else
@@ -1640,7 +1639,7 @@ public class Chess {
 										if(tempR.hasMoved)
 										{
 											play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-											System.out.println("Rook has moved - no castling allowed.");
+											
 											return play;
 										}
 										else
@@ -1665,7 +1664,7 @@ public class Chess {
 								else
 								{
 									play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-									System.out.println("Cannot move there. WTF");
+									
 									return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 								}
 
@@ -1796,7 +1795,6 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("queen invalid movement ill move");
 				return play;
 			}
 			else //move is valid
@@ -1841,7 +1839,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -1948,7 +1946,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 							/* 					//en passant limiter
@@ -2066,7 +2064,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2195,7 +2193,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("knight invalid movement ill move");
+				
 				return play;
 			}
 			else //move is valid
@@ -2240,7 +2238,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2347,7 +2345,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2444,7 +2442,7 @@ public class Chess {
 						if(currWK.onCheck(play.piecesOnBoard, move))//simulates the move in future
 						{
 							play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-							System.out.println("found you: not check -> knight onCheck future"); 
+							
 							return play; //Not currently check - white moves and puts own king in danger (illegal play)
 						} 
 					}
@@ -2469,7 +2467,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2598,7 +2596,7 @@ public class Chess {
 			if(canMove == false)
 			{
 				play.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				//System.out.println("rook invalid movement ill move");
+				
 				return play;
 			}
 			else //move is valid
@@ -2643,7 +2641,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2755,7 +2753,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -2880,7 +2878,7 @@ public class Chess {
 							else
 							{
 								play.message = ReturnPlay.Message.ILLEGAL_MOVE; 
-								System.out.println("Cannot move there.");
+								
 								return play; //collision: cannot move to target piece. (maybe same color of moving piece)
 							}
 
@@ -3008,7 +3006,7 @@ public class Chess {
 		}
 				
 
-		System.out.println("Nothing changed, some if statement booted out the game state to the end.");
+		
 		return play;
 	}
 	//end of chess.Chess.play

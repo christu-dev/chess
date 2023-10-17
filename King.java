@@ -104,11 +104,11 @@ class King extends ReturnPiece
         int endRank = Integer.parseInt(move.substring(4, 5));
 
 		if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 
@@ -272,7 +272,7 @@ class King extends ReturnPiece
 	
 	public boolean onCheck(ArrayList<ReturnPiece> currentBoard) //returns true if passed board parameter is in check
 	{ 
-		/*System.out.println("On check was called on " + this.toString());	*/
+		
 
 		
 			String kingPosition = this.toString().substring(0, 2);
@@ -367,7 +367,7 @@ class King extends ReturnPiece
 								String checkPos = ""+(char)x+y+"";
 								if(rp.toString().substring(0,2).equals(checkPos))
 								{
-									System.out.println("Something in the way of bishop diagonal");
+									
 									break bishopCheck; 
 								}
 							}
@@ -392,7 +392,7 @@ class King extends ReturnPiece
 								String checkPos = ""+(char)x+y+"";
 								if(rp.toString().substring(0,2).equals(checkPos))
 								{
-									System.out.println("Something in the way of queen diagonal");
+									
 									break queenCheck; 
 								}
 							}
@@ -460,7 +460,7 @@ class King extends ReturnPiece
 										String checkPos = ""+(char)kingFile+""+rank+"";
 										if(rp.toString().substring(0,2).equals(checkPos))
 										{
-											System.out.println("Something in the way of rook vertical");
+											
 											break rookCheck; 
 										}
 									}
@@ -481,7 +481,7 @@ class King extends ReturnPiece
 										String checkPos = ""+(char)kingFile+""+rank+"";
 										if(rp.toString().substring(0,2).equals(checkPos))
 										{
-											System.out.println("Something in the way of queen vertical");
+											
 											break queenCheck; 
 										}
 									}
@@ -503,7 +503,7 @@ class King extends ReturnPiece
 										String checkPos = ""+(char)file+""+kingRank+"";
 										if(rp.toString().substring(0,2).equals(checkPos))
 										{
-											System.out.println("Something in the way of rook horizontal");
+											
 											break rookCheck; 
 										}
 									}
@@ -522,7 +522,7 @@ class King extends ReturnPiece
 										String checkPos = ""+(char)file+""+kingRank+"";
 										if(rp.toString().substring(0,2).equals(checkPos))
 										{
-											System.out.println("Something in the way of queen horizontal");
+											
 											break queenCheck; 
 										}
 									}
@@ -631,12 +631,7 @@ class King extends ReturnPiece
 				currentBoard.add(piece2);
 			}	
 		}
-		/*for(ReturnPiece piece: currentBoard)//clone the board
-		{
-			System.out.println(piece);
-		}
-		//Deep copy is working
-		*/
+		
 
 		String startFile = move.substring(0,1);
 		int startRank = Integer.parseInt(move.substring(1,2));
@@ -645,11 +640,11 @@ class King extends ReturnPiece
 		int endRank = Integer.parseInt(move.substring(4,5));
 
 		if(startFile.charAt(0) < 'a' || startFile.charAt(0) > 'h' || startRank < 1 || startRank > 8){
-			//System.out.println("out of bounds");
+			
 			return true; //for checkmate check purposes avoiding stack overflow
 		}
 		if(endFile.charAt(0) < 'a' || endFile.charAt(0) > 'h' || endRank < 1 || endRank > 8){
-			//System.out.println("out of bounds");
+			
 			return true; //for checkmate check purposes avoiding stack overflow
 		}
 
@@ -690,7 +685,7 @@ class King extends ReturnPiece
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Knight) //find the piece and attach it to current piece
 			{
 				currentKnight = (Knight)rp;
-				//System.out.println("knight attached"); works
+				
 			}
 			//Rook check------------
 			if(rp.toString().substring(0,2).equals(move.substring(0, 2)) && rp instanceof Rook) //find the piece and attach it to current piece
@@ -701,12 +696,12 @@ class King extends ReturnPiece
 		} //end iterating through pieces for Piece attachment
 		if(currentBishop == null && currentPawn == null && currentKing == null && currentQueen == null && currentKnight == null && currentRook == null)
 		{
-			System.out.println("No legal move in onCheck future (this is not supposed to happen, it should've caught earlier)");
+			
 			return true; //this will result in illegal move
 		}
 
 
-		//System.out.println("we got here");
+		
 		//MOVING ALL THE HYPOTHETICAL PIECES
 		//TODO if piece found was a Bishop:----------------------------------------------------------------------------------------------------------------
 		if(currentBishop != null)
@@ -724,7 +719,7 @@ class King extends ReturnPiece
 					}
 					else
 					{
-						System.out.println("oncheck future Bishop capture fail");
+						
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
@@ -789,7 +784,7 @@ class King extends ReturnPiece
 					//CHECKING KING ON CHECK IN FUTURE
 					if(currKing.onCheck(currentBoard))
 					{
-						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						
 						return true;
 					}
 					//if the move doesn't return true; valid move for bishop
@@ -881,10 +876,10 @@ class King extends ReturnPiece
 					}
 
 					//CHECKING KING ON CHECK IN FUTURE
-					//System.out.println("made it here");
+					
 					if(currKing.onCheck(currentBoard))
 					{
-						System.out.println("pawn in oncheck future can't be moved: king is still in check or you're putting king into check this way.");
+						
 						return true;
 					}
 					//if the move doesn't return true; valid move for pawn
@@ -907,7 +902,7 @@ class King extends ReturnPiece
 					}
 					else
 					{
-						System.out.println("oncheck future queen can capture failed");
+						
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
@@ -974,7 +969,7 @@ class King extends ReturnPiece
 					//CHECKING KING ON CHECK IN FUTURE
 					if(currKing.onCheck(currentBoard))
 					{
-						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						
 						return true;
 					}
 					//if the move doesn't return true; valid move for bishop
@@ -998,7 +993,7 @@ class King extends ReturnPiece
 				}
 				else
 				{
-					System.out.println("oncheck future knight can capture fail");
+					
 					return true; //not a check but this will return an illegal move regardless as in an early capture check
 				}
 
@@ -1064,7 +1059,7 @@ class King extends ReturnPiece
 				//CHECKING KING ON CHECK IN FUTURE
 				if(currKing.onCheck(currentBoard))
 				{
-					System.out.println("knight in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+
 					return true;
 				}
 				//if the move doesn't return true; valid move for bishop
@@ -1087,7 +1082,7 @@ class King extends ReturnPiece
 					}
 					else
 					{
-						System.out.println("oncheck Rook oncheck cancapture fail");
+						
 						return true; //not a check but this will return an illegal move regardless as in an early capture check
 					}
 
@@ -1151,7 +1146,7 @@ class King extends ReturnPiece
 					//CHECKING KING ON CHECK IN FUTURE
 					if(currKing.onCheck(currentBoard))
 					{
-						System.out.println("bishop in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						
 						return true;
 					}
 					//if the move doesn't return true; valid move for bishop
@@ -1176,16 +1171,16 @@ class King extends ReturnPiece
         		int rankDiff = Math.abs(endRank2 - startRank2);
 
 				if(startFile2 < 'a' || startFile2 > 'h' || startRank2 < 1 || startRank2 > 8){
-				//System.out.println("out of bounds");
+				
 					return true; //bounds checking but still returns illegal move
 				}
 				if(endFile2 < 'a' || endFile2 > 'h' || endRank2 < 1 || endRank2 > 8){
-				//System.out.println("out of bounds");
+				
 					return true; //bounds checking but still returns illegal move
 				}
 
 				if (this.onCheck(currentBoard) && fileDiff > 1 || rankDiff > 1){
-					System.out.println("ooncheck future King rank diff failed");
+					
 					return true; //cannot castle to escape a check, returns false, which prints illegal move
 				}
 
@@ -1197,7 +1192,7 @@ class King extends ReturnPiece
 				}
 				else
 				{
-					System.out.println("oncheck King can capture failed");
+					
 					return true; //not a check but this will return an illegal move regardless as in an early capture check
 				}
 
@@ -1245,7 +1240,7 @@ class King extends ReturnPiece
 					
 					if(currentKing.onCheck(currentBoard))
 					{
-						System.out.println("King in oncheck future can't be moved: king is still in check or you're putting king in check this way.");
+						
 						return true;
 					}
 					//if the move doesn't return true; valid move for king
@@ -1253,7 +1248,7 @@ class King extends ReturnPiece
 		} //ends all pieces moving.
 
 		
-			System.out.println("Somehow there was not a piece sent to onCheck future, pskipped simulated move, this shouldn't happen");
+			
 			return true; //will get illegal move
 		
 	}
@@ -1525,9 +1520,6 @@ class King extends ReturnPiece
 		}
 		else
 		{
-			for(String s : escapeOptions){
-				System.out.println(s);
-			}
 			return false; //escape options don't exist
 		}
 

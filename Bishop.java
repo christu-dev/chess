@@ -52,27 +52,23 @@ class Bishop extends ReturnPiece {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
 		if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 
-		/* works: currentBoard param is passing from piecesOnBoard of ReturnPlay play
-		System.out.println(startFile);
-		System.out.println(startRank);
-		System.out.println(endFile);
-		System.out.println(endRank);*/
+		
 
 		if(startFile == endFile || startRank == endRank){
-			//System.out.println("Bishop Did not move Diagonally");
+			
 			return false;
 		}
 	 	if(Math.abs(endRank - startRank) != Math.abs(startFile - endFile))
 		{
-			//System.out.println("Bishop Did not move diagonally respective to starting position");
+			
 			return false;
 		}
 
@@ -101,7 +97,7 @@ class Bishop extends ReturnPiece {
 			{
 				String checkPos = ""+(char)x+y+"";
 				if(rp.toString().substring(0,2).equals(checkPos)){
-					//System.out.println("PIECE IN WAY");
+				
 					return false;
 				}
 			}

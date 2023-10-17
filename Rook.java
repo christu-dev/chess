@@ -68,11 +68,11 @@ class Rook extends ReturnPiece {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
 		if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 
@@ -93,7 +93,6 @@ class Rook extends ReturnPiece {
 				{
                     if (isOccupied(currentBoard, startFile, rank)) 
 					{
-						System.out.println("Something is in way of Rook while moving vertically");
                         return false; //piece is in way while moving vertically
                     }
                 }
@@ -106,7 +105,6 @@ class Rook extends ReturnPiece {
 				{
                     if (isOccupied(currentBoard, file, startRank)) 
 					{
-						System.out.println("Something is in way of Rook while moving horizontally");
                         return false; //piece is in way while moving horizontally
                     }
                 }

@@ -89,11 +89,11 @@ class Pawn extends ReturnPiece {
 		int endRank = Integer.parseInt(move.substring(4,5));
 
         if(startFile < 'a' || startFile > 'h' || startRank < 1 || startRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 		if(endFile < 'a' || endFile > 'h' || endRank < 1 || endRank > 8){
-			//System.out.println("out of bounds");
+			
 			return false;
 		}
 
@@ -111,7 +111,7 @@ class Pawn extends ReturnPiece {
                     for (ReturnPiece rp : currentBoard) {
                         String checkPos = "" + startFile + (startRank + 1); //temporary space checker
                         if (rp.toString().substring(0, 2).equals(checkPos)) {
-                            //System.out.println("There is a piece in the way (Normal Move White Pawn)");
+                           
                             return false;
                         }
                     }
@@ -127,7 +127,7 @@ class Pawn extends ReturnPiece {
                         String checkPos1 = "" + startFile + (startRank + 1); 
                         String checkPos2 = "" + startFile + (startRank + 2);
                         if (rp.toString().substring(0, 2).equals(checkPos1) || rp.toString().substring(0, 2).equals(checkPos2)) {
-                          //  System.out.println("There is a piece in the way (Double Move White Pawn)");
+                          
                             return false;
                         }
                     }
@@ -144,7 +144,7 @@ class Pawn extends ReturnPiece {
                     for (ReturnPiece rp : currentBoard) {
                         String checkPos = "" + startFile + (startRank - 1);
                         if (rp.toString().substring(0, 2).equals(checkPos)) {
-                         //   System.out.println("There is a piece in the way (Normal Move Black Pawn)");
+                         
                             return false;
                         }
                     }
@@ -156,7 +156,7 @@ class Pawn extends ReturnPiece {
                         String checkPos1 = "" + startFile + (startRank - 1);
                         String checkPos2 = "" + startFile + (startRank - 2);
                         if (rp.toString().substring(0, 2).equals(checkPos1) || rp.toString().substring(0, 2).equals(checkPos2)) {
-                           // System.out.println("There is a piece in the way (Double Move Black Pawn)");
+                           
                             return false;
                         }
                     }
@@ -167,10 +167,10 @@ class Pawn extends ReturnPiece {
         }
         else if(Capture.canPawnCapture(currentBoard, move, this.white)){
             
-                System.out.println("got here");
+                
                  return true;       
         }
-        System.out.println("Regular move validate failed. canPawnCapture failed.");
+        
         return false; //all other moves are wrong
     }// end of checkValidMove
 
